@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[edge_functions]]
+  function = "pigomax-auth"
+  path = "/pigomaxplan"
+
+[[edge_functions]]
+  function = "pigomax-auth"
+  path = "/pigomaxplan/*"

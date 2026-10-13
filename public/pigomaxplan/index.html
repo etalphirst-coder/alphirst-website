@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pigomax · 上海室内匹克球馆 · 场馆设计提案 v3</title>
+<style>
+  :root {
+    --bg-primary: #f4f1e8;
+    --bg-secondary: #ece8db;
+    --bg-dark: #1e3328;
+    --text-primary: #1e3328;
+    --text-secondary: #4a5a50;
+    --text-muted: #8a938c;
+    --accent-green: #2d5240;
+    --accent-green-deep: #1e3328;
+    --accent-wood: #a9814f;
+    --accent-warn: #a05a2c;
+    --border-subtle: rgba(30, 51, 40, 0.12);
+    --border-strong: rgba(30, 51, 40, 0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: -apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .serif { font-family: 'Georgia', 'Songti SC', serif; }
+
+  /* ============ HERO ============ */
+  .hero {
+    min-height: 94vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: var(--bg-dark);
+    color: #f4f1e8;
+    text-align: center;
+    padding: 60px 40px;
+  }
+  .hero-tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: #c9b489;
+    margin-bottom: 30px;
+  }
+  .hero-title {
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+  .hero-subtitle {
+    font-size: 1.05rem;
+    color: #cfd8cf;
+    max-width: 700px;
+    line-height: 1.8;
+    margin-bottom: 44px;
+  }
+  .hero-line {
+    width: 80px;
+    height: 2px;
+    background: #c9b489;
+    margin-bottom: 44px;
+  }
+  .hero-meta { display: flex; gap: 42px; flex-wrap: wrap; justify-content: center; }
+  .hero-meta-item { text-align: center; }
+  .hero-meta-num { font-size: 1.8rem; color: #c9b489; font-weight: 600; }
+  .hero-meta-label { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: #9aa898; margin-top: 4px; }
+  .hero-note {
+    max-width: 900px;
+    margin-top: 42px;
+    padding: 18px 24px;
+    border: 1px solid rgba(201, 180, 137, 0.35);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #cfd8cf;
+    font-size: 0.88rem;
+    line-height: 1.8;
+  }
+  .hero-note b { color: #c9b489; font-weight: 600; }
+
+  /* ============ SECTION ============ */
+  .section { padding: 90px 40px; max-width: 1300px; margin: 0 auto; }
+  .section-tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent-green);
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+  .section h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 24px;
+  }
+  .section-intro { font-size: 1.02rem; color: var(--text-secondary); max-width: 880px; margin-bottom: 46px; }
+  .divider { height: 1px; background: var(--border-subtle); max-width: 1300px; margin: 0 auto; }
+
+  /* ============ CARDS / GRIDS ============ */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card {
+    background: #fff;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 30px;
+  }
+  .card h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 10px; }
+  .card p { font-size: 0.92rem; color: var(--text-secondary); }
+  .card-dark { background: var(--bg-dark); color: #f4f1e8; border: none; }
+  .card-dark h4 { color: #c9b489; }
+  .card-dark p { color: #cfd8cf; }
+
+  .kicker { font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-wood); font-weight: 600; margin-bottom: 8px; }
+
+  /* ============ TABLES ============ */
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--border-subtle); border-radius: 10px; overflow: hidden; font-size: 0.9rem; margin-bottom: 8px; }
+  th { background: var(--bg-dark); color: #f4f1e8; text-align: left; padding: 12px 16px; font-weight: 500; font-size: 0.82rem; letter-spacing: 0.05em; }
+  td { padding: 11px 16px; border-top: 1px solid var(--border-subtle); color: var(--text-secondary); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  th.num { text-align: right; }
+  tr.total td { background: var(--bg-secondary); font-weight: 600; color: var(--text-primary); border-top: 2px solid var(--border-strong); }
+  tr.subtotal td { background: #faf8f2; font-weight: 600; color: var(--text-primary); }
+  td b { color: var(--text-primary); }
+
+  /* ============ IMAGES ============ */
+  .img-full { width: 100%; border-radius: 10px; display: block; }
+  .img-card { background: #fff; border: 1px solid var(--border-subtle); border-radius: 10px; overflow: hidden; }
+  .img-card img { width: 100%; display: block; }
+  .img-card .cap { padding: 14px 20px; font-size: 0.85rem; color: var(--text-secondary); }
+  .img-card .cap b { color: var(--text-primary); }
+
+  .ref-hero { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 32px; align-items: center; }
+  .ref-hero img { width: 100%; border-radius: 10px; }
+
+  /* ============ CALLOUTS ============ */
+  .callout {
+    border-left: 3px solid var(--accent-green);
+    background: #fff;
+    padding: 20px 26px;
+    border-radius: 0 10px 10px 0;
+    margin: 24px 0;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+  }
+  .callout.warn { border-left-color: var(--accent-warn); background: #faf3ea; }
+  .callout b { color: var(--text-primary); }
+
+  /* ============ PLAN ============ */
+  .plan-wrap { background: #fff; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 22px; }
+  .plan-wrap svg { width: 100%; height: auto; display: block; }
+  .plan-legend { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 16px; font-size: 0.8rem; color: var(--text-secondary); }
+  .plan-legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .plan-legend i { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid var(--border-strong); }
+
+  /* ============ FOOTER ============ */
+  .footer { background: var(--bg-dark); color: #9aa898; padding: 60px 40px; text-align: center; font-size: 0.85rem; margin-top: 40px; }
+  .footer b { color: #f4f1e8; }
+
+  .src { font-size: 0.78rem; color: var(--text-muted); line-height: 1.9; }
+  .src a { color: var(--accent-green); text-decoration: none; border-bottom: 1px solid var(--border-subtle); }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .ref-hero { grid-template-columns: 1fr; }
+    .section { padding: 60px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="hero-tag">Pigomax · Shanghai Indoor Pickleball Club</div>
+  <h1 class="hero-title serif">Pigomax</h1>
+  <p class="hero-subtitle">2,200 m² 城市室内匹克球俱乐部。8 片专业场地、赛事级场地标准与俱乐部级社交体验，构成上海室内匹克球的核心据点。本提案为场馆设计篇（规划、标准、平面与空间）；投资预算、会员体系与财务模型详见配套 Excel《PIGOMAX 财务模型 v1 · 会员制口径》。</p>
+  <div class="hero-line"></div>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="hero-meta-num">56.0 × 39.3 m</div><div class="hero-meta-label">建筑外廓 · 2,200 m²</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-num">8 片</div><div class="hero-meta-label">专业场地</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-num">9.0 m</div><div class="hero-meta-label">竞赛空间净高</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-num">13.41 × 6.10 m</div><div class="hero-meta-label">标准比赛区 · 44 × 20 ft</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-num">4 色</div><div class="hero-meta-label">深苔绿 · 米白 · 橡木 · 水泥灰</div></div>
+  </div>
+  <div class="hero-note"><b>提案用途说明</b>　　本文件用于场地合作、政府及园区合作沟通。方案以约 2,200 m² 的理想场地条件为基础，呈现 Pigomax 的标准化空间构想、运营功能与赛事承载能力；实际落地方案将结合具体项目的建筑条件、面积、层高、结构、消防、机电及属地审批要求进行专项深化与适配设计。<br><b>项目负责人</b>　Eric Tian</div>
+</div>
+
+<!-- ================= 01 设计标准（先定尺寸，再出图） ================= -->
+<div class="section">
+  <div class="section-tag">01 / 设计标准</div>
+  <h2 class="serif">Dimension-First Standards</h2>
+  <p class="section-intro">本项目所有平面与效果图遵循同一套尺寸与层高标准：先确定每片场地、每个空间的真实尺寸与层高，再据此生成平面与渲染，确保所有图纸与效果图在相对比例上完全一致。</p>
+
+  <h4 style="margin:0 0 12px;">场地尺寸标准</h4>
+  <table style="margin-bottom:34px;">
+    <tr>
+      <th>场地类型</th><th class="num">数量</th><th class="num">比赛区 长 × 宽 (m)</th><th class="num">端线缓冲</th><th class="num">边线缓冲</th><th class="num">含缓冲总尺寸 长 × 宽 (m)</th><th>标准定位</th>
+    </tr>
+    <tr><td>主赛场（竞赛空间中央 C2）</td><td class="num">1</td><td class="num">13.41 × 6.10</td><td class="num">3.30 m</td><td class="num">2.45 m</td><td class="num">20.00 × 11.00</td><td>国际 / 国内顶级赛事</td></tr>
+    <tr><td>标准场（竞赛空间 C1/C3/C4/C5）</td><td class="num">4</td><td class="num">13.41 × 6.10</td><td class="num">2.44 m</td><td class="num">1.52 m</td><td class="num">18.29 × 9.14</td><td>30 ft × 60 ft 标准场</td></tr>
+    <tr><td>VIP 场（联合空间）</td><td class="num">2</td><td class="num">13.41 × 6.10</td><td class="num">3.00 m</td><td class="num">1.95 m</td><td class="num">19.42 × 10.00</td><td>保守型专业缓冲</td></tr>
+    <tr><td>VVIP 场（独立房间）</td><td class="num">1</td><td class="num">13.41 × 6.10</td><td class="num">3.00 m</td><td class="num">1.95 m</td><td class="num">19.42 × 10.00</td><td>保守型专业缓冲</td></tr>
+    <tr class="total"><td>合计</td><td class="num">8 片</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+  </table>
+
+  <h4 style="margin:0 0 12px;">层高标准（按专业赛事要求）</h4>
+  <table style="margin-bottom:34px;">
+    <tr><th>空间</th><th class="num">净高</th><th>依据 / 说明</th></tr>
+    <tr><td>竞赛空间（C1–C5，含主赛场）</td><td class="num">9.0 m</td><td>满足国家级专业赛事：Pickleball Canada 锦标赛申办要求比赛区净高 ≥ 9 m（30 ft）；顶级国际赛事建议 ≥ 12 m（39 ft）</td></tr>
+    <tr><td>VIP / VVIP 场地</td><td class="num">7.0 m</td><td>满足专业训练与高级别对局，兼顾私密空间的尺度感</td></tr>
+    <tr><td>前台接待与社交区</td><td class="num">4.2 m</td><td>局部吊顶，营造亲密尺度；上方为设备层</td></tr>
+    <tr><td>更衣 / 零售 / 后勤</td><td class="num">3.6–4.2 m</td><td>局部吊顶</td></tr>
+  </table>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="kicker">画线标准</div>
+      <h4>匹克球专用画线</h4>
+      <p>全部场地为匹克球标准画线：比赛区 13.41 × 6.10 m（44 × 20 ft），含中网、两条非截击区（kitchen）线与发球区中线。不使用网球画线，不出现两侧边道、发球区方格或任何多余线条。</p>
+    </div>
+    <div class="card">
+      <div class="kicker">地面标准</div>
+      <h4>连续运动硬地</h4>
+      <p>比赛区与场地间通道为连续的哑光丙烯酸运动硬地，防滑、无反光——缓冲区内外一致，不存在"出缓冲区即打滑"的材质突变。前台与社交区采用哑光微水泥，不使用高光石材。</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================= 02 项目定位 ================= -->
+<div class="section">
+  <div class="section-tag">02 / 项目定位</div>
+  <h2 class="serif">A Club Built Around the Court</h2>
+  <p class="section-intro">Pigomax 以"专业场地能力"为根基，向社交与赛事两端延展：白天是会员训练与社交的据点，赛时是可承办专业赛事的场馆。</p>
+  <div class="grid-3">
+    <div class="card"><div class="kicker">支柱一</div><h4>赛事级场地</h4><p>8 片场地全部按 44 × 20 ft 标准比赛区建造，主赛场与 VIP / VVIP 场地保留专业缓冲区，竞赛空间净高 9 m，可承接国际及国内顶级赛事。</p></div>
+    <div class="card"><div class="kicker">支柱二</div><h4>可切换的竞赛空间</h4><p>5 片竞赛场地以可升降隔断组合：日常降下分隔为 5 片独立场地，赛事时升起整合为带四面观赛空间的主赛场，并可加设临时推拉式看台。</p></div>
+    <div class="card"><div class="kicker">支柱三</div><h4>一体化的接待与社交</h4><p>前台接待、社交 Lounge 与咖啡酒吧合并为一个连续空间，由前台统一服务；场地间的空档区域布置简易休息座椅，服务相邻场地。</p></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================= 03 色彩与材质 ================= -->
+<div class="section">
+  <div class="section-tag">03 / 色彩与材质</div>
+  <h2 class="serif">Palette &amp; Materials</h2>
+  <p class="section-intro">四色体系贯穿全馆：深苔绿 <span style="display:inline-block;width:12px;height:12px;background:#2d5240;border-radius:3px;vertical-align:middle;"></span> #2D5240 · 米白 <span style="display:inline-block;width:12px;height:12px;background:#f0ecdf;border-radius:3px;vertical-align:middle;border:1px solid #ddd;"></span> #F0ECDF · 橡木 <span style="display:inline-block;width:12px;height:12px;background:#a9814f;border-radius:3px;vertical-align:middle;"></span> #A9814F · 水泥灰 <span style="display:inline-block;width:12px;height:12px;background:#9a9890;border-radius:3px;vertical-align:middle;"></span> #9A9890。高级感来自配色纪律与灯光，而非贵价材料。</p>
+
+  <table>
+    <tr><th>部位</th><th>做法</th><th>说明</th></tr>
+    <tr><td>比赛区地面</td><td>连续哑光丙烯酸运动硬地（绿色）</td><td>覆盖全部场地与通道，防滑、无反光，性能不打折扣</td></tr>
+    <tr><td>前台 / 社交区地面</td><td>哑光微水泥</td><td>暖色、不反光，与比赛区形成材质过渡而非突变</td></tr>
+    <tr><td>墙面</td><td>深苔绿 / 米白环保乳胶漆，白字标语上墙</td><td>大面积纯色制造视觉焦点</td></tr>
+    <tr><td>重点墙点缀</td><td>橡木饰面板</td><td>仅用于接待台背景、VIP / VVIP 端墙等视线焦点</td></tr>
+    <tr><td>吊顶</td><td>裸顶深色喷涂 + 局部吸音棉</td><td>保留层高与工业感</td></tr>
+    <tr><td>隔断</td><td>可升降隔断 + 局部钢化玻璃</td><td>竞赛空间联动与私密性兼顾</td></tr>
+    <tr><td>灯光</td><td>3000K 线性暖光 + 球场专用 LED</td><td>观感的关键来源，球场照明不打折扣</td></tr>
+    <tr><td>软装</td><td>简约家具 + 绿植成列</td><td>绿植替代艺术品与部分隔断</td></tr>
+  </table>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================= 04 视觉参照 ================= -->
+<div class="section">
+  <div class="section-tag">04 / 视觉参照</div>
+  <h2 class="serif">Visual Reference</h2>
+  <div class="ref-hero" style="margin-top:10px;">
+    <img src="reference_images/ref_14_style_reference_clean.jpg" alt="视觉风格参照">
+    <div>
+      <div class="kicker">参照要点</div>
+      <p style="color:var(--text-secondary); font-size:0.95rem;">① 深绿墙面占比高，白色标语排版制造焦点；<br>② 木饰面集中在视线水平带（墙面中段与吧台），不落地不通高；<br>③ 光源全部为 3000K 线性暖光，隐藏式洗墙；<br>④ 绿植用橄榄树 / 琴叶榕成列布置，替代隔断与艺术品；<br>⑤ 地面为连续哑光运动硬地，与墙面同色系，消除视觉割裂。</p>
+      <div class="callout" style="margin-top:20px;"><b>说明：</b>此图仅用于说明空间配色、灯光与地面材质语言，非品牌或具体项目复刻。</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================= 05 全局俯瞰与区域渲染 ================= -->
+<div class="section">
+  <div class="section-tag">05 / 全局俯瞰与区域渲染</div>
+  <h2 class="serif">Master Plan &amp; Area Renderings</h2>
+  <p class="section-intro">先以整馆平面确定各区域的真实尺寸与相对关系，再据此生成各空间的效果图。以下平面图按真实比例绘制（比例尺见图中），建筑外廓 56.0 × 39.3 m。效果图的场地布局、匹克球画线、连续运动硬地与层高，均以本平面图为准。</p>
+
+  <div class="plan-wrap" style="margin-bottom:28px;">
+    <svg viewBox="0 0 940 665" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pigomax 整馆平面图">
+      <defs>
+        <symbol id="pbcourt" viewBox="0 0 13.41 6.10" preserveAspectRatio="none">
+          <rect x="0" y="0" width="13.41" height="6.10" fill="#c7dcc7" stroke="#ffffff" stroke-width="0.09"/>
+          <line x1="4.571" y1="0" x2="4.571" y2="6.10" stroke="#ffffff" stroke-width="0.09"/>
+          <line x1="8.839" y1="0" x2="8.839" y2="6.10" stroke="#ffffff" stroke-width="0.09"/>
+          <line x1="0" y1="3.05" x2="4.571" y2="3.05" stroke="#ffffff" stroke-width="0.09"/>
+          <line x1="8.839" y1="3.05" x2="13.41" y2="3.05" stroke="#ffffff" stroke-width="0.09"/>
+          <line x1="6.705" y1="0" x2="6.705" y2="6.10" stroke="#1e3328" stroke-width="0.17"/>
+        </symbol>
+      </defs>
+
+      <!-- 尺寸标注 -->
+      <line x1="80" y1="44" x2="808" y2="44" stroke="#8a938c" stroke-width="1"/>
+      <line x1="80" y1="38" x2="80" y2="50" stroke="#8a938c" stroke-width="1"/>
+      <line x1="808" y1="38" x2="808" y2="50" stroke="#8a938c" stroke-width="1"/>
+      <text x="444" y="36" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="13" fill="#4a5a50">56.0 m</text>
+      <line x1="62" y1="60" x2="62" y2="571" stroke="#8a938c" stroke-width="1"/>
+      <line x1="56" y1="60" x2="68" y2="60" stroke="#8a938c" stroke-width="1"/>
+      <line x1="56" y1="571" x2="68" y2="571" stroke="#8a938c" stroke-width="1"/>
+      <text x="50" y="315" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="13" fill="#4a5a50" transform="rotate(-90 50 315)">39.3 m</text>
+
+      <!-- 建筑外廓 -->
+      <rect x="80" y="60" width="728" height="511" fill="#f7f5ee" stroke="#1e3328" stroke-width="2.5"/>
+
+      <!-- 竞赛整合空间底 36.58 × 30.0 -->
+      <rect x="80" y="60" width="475.5" height="390" fill="#e8efe8" stroke="#2d5240" stroke-width="1.5"/>
+
+      <!-- C1 / C3 -->
+      <rect x="80" y="60" width="237.8" height="118.8" fill="#dfe9df" stroke="#9ab09a" stroke-width="1"/>
+      <use href="#pbcourt" x="111.75" y="79.75" width="174.3" height="79.3"/>
+      <rect x="317.8" y="60" width="237.8" height="118.8" fill="#dfe9df" stroke="#9ab09a" stroke-width="1"/>
+      <use href="#pbcourt" x="349.55" y="79.75" width="174.3" height="79.3"/>
+
+      <!-- 中央休息区 -->
+      <rect x="80" y="178.8" width="107.8" height="143" fill="#eef3ee" stroke="#9ab09a" stroke-width="1"/>
+      <rect x="447.8" y="178.8" width="107.8" height="143" fill="#eef3ee" stroke="#9ab09a" stroke-width="1"/>
+
+      <!-- C2 主赛场 -->
+      <rect x="187.8" y="178.8" width="260" height="143" fill="#d3ded3" stroke="#1e3328" stroke-width="2"/>
+      <use href="#pbcourt" x="230.65" y="210.65" width="174.3" height="79.3"/>
+
+      <!-- C4 / C5 -->
+      <rect x="80" y="321.8" width="237.8" height="118.8" fill="#dfe9df" stroke="#9ab09a" stroke-width="1"/>
+      <use href="#pbcourt" x="111.75" y="341.55" width="174.3" height="79.3"/>
+      <rect x="317.8" y="321.8" width="237.8" height="118.8" fill="#dfe9df" stroke="#9ab09a" stroke-width="1"/>
+      <use href="#pbcourt" x="349.55" y="341.55" width="174.3" height="79.3"/>
+
+      <!-- 竞赛空间内动线 -->
+      <rect x="80" y="440.6" width="475.5" height="9.4" fill="#eef3ee" stroke="#9ab09a" stroke-width="1"/>
+
+      <!-- VIP / VVIP 列 19.42 × 30.0 -->
+      <rect x="555.5" y="60" width="252.5" height="390" fill="#eef2ee" stroke="#2d5240" stroke-width="1.5"/>
+      <rect x="555.5" y="60" width="252.5" height="130" fill="#f3ecdd" stroke="#a9814f" stroke-width="1.5"/>
+      <use href="#pbcourt" x="594.6" y="85.35" width="174.3" height="79.3"/>
+      <line x1="555.5" y1="190" x2="808" y2="190" stroke="#9ab09a" stroke-width="1"/>
+      <use href="#pbcourt" x="594.6" y="215.35" width="174.3" height="79.3"/>
+      <line x1="555.5" y1="320" x2="808" y2="320" stroke="#9ab09a" stroke-width="1"/>
+      <use href="#pbcourt" x="594.6" y="345.35" width="174.3" height="79.3"/>
+
+      <!-- 服务带 -->
+      <rect x="80" y="450" width="314.4" height="121" fill="#f0eee6" stroke="#8a938c" stroke-width="1"/>
+      <rect x="394.4" y="450" width="371.7" height="121" fill="#ecebe4" stroke="#8a938c" stroke-width="1"/>
+      <rect x="766.1" y="450" width="41.9" height="121" fill="#e6e5dd" stroke="#8a938c" stroke-width="1"/>
+
+      <!-- 主入口 -->
+      <line x1="150" y1="571" x2="230" y2="571" stroke="#a05a2c" stroke-width="4"/>
+      <text x="190" y="590" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="10" fill="#a05a2c">主入口</text>
+
+      <!-- 标签：场地 -->
+      <text x="198.9" y="115" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="14" font-weight="700" fill="#1e3328">C1</text>
+      <text x="198.9" y="132" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="10" fill="#4a5a50">18.29 × 9.14</text>
+      <text x="436.7" y="115" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="14" font-weight="700" fill="#1e3328">C3</text>
+      <text x="436.7" y="132" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="10" fill="#4a5a50">18.29 × 9.14</text>
+      <text x="317.8" y="228" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="15" font-weight="700" fill="#1e3328">C2 · 主赛场</text>
+      <text x="317.8" y="245" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="10" fill="#4a5a50">20.00 × 11.00</text>
+      <text x="198.9" y="377" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="14" font-weight="700" fill="#1e3328">C4</text>
+      <text x="198.9" y="394" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="10" fill="#4a5a50">18.29 × 9.14</text>
+      <text x="436.7" y="377" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="14" font-weight="700" fill="#1e3328">C5</text>
+      <text x="436.7" y="394" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="10" fill="#4a5a50">18.29 × 9.14</text>
+      <text x="133.9" y="245" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="9" fill="#8a938c">休息区</text>
+      <text x="501.7" y="245" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="9" fill="#8a938c">休息区</text>
+
+      <text x="681.75" y="122" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="13" font-weight="700" fill="#7a5a2e">VVIP 独立房间</text>
+      <text x="681.75" y="139" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="10" fill="#8a6a3e">19.42 × 10.00</text>
+      <text x="681.75" y="252" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="13" font-weight="700" fill="#2d5240">VIP-A</text>
+      <text x="681.75" y="269" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="10" fill="#4a5a50">19.42 × 10.00</text>
+      <text x="681.75" y="382" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="13" font-weight="700" fill="#2d5240">VIP-B</text>
+      <text x="681.75" y="399" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="10" fill="#4a5a50">19.42 × 10.00</text>
+
+      <!-- 标签：服务带 -->
+      <text x="237.2" y="505" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="13" font-weight="700" fill="#1e3328">前台接待与社交区</text>
+      <text x="237.2" y="524" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="10" fill="#4a5a50">前台 + Lounge + 咖啡酒吧 + 共享动线 · 225 m² · 净高 4.2 m</text>
+      <text x="580.25" y="505" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="13" font-weight="700" fill="#1e3328">更衣 / 零售 / 后勤</text>
+      <text x="580.25" y="524" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="10" fill="#4a5a50">更衣室 · Pro Shop · 卫生间 · 储物 · 员工 · 266 m²</text>
+      <text x="787.05" y="516" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="10" fill="#4a5a50" transform="rotate(-90 787.05 516)">机电 30 m²</text>
+
+      <!-- 比例尺 -->
+      <line x1="80" y1="630" x2="210" y2="630" stroke="#1e3328" stroke-width="2"/>
+      <line x1="80" y1="625" x2="80" y2="635" stroke="#1e3328" stroke-width="2"/>
+      <line x1="210" y1="625" x2="210" y2="635" stroke="#1e3328" stroke-width="2"/>
+      <text x="145" y="650" text-anchor="middle" font-family="PingFang SC, sans-serif" font-size="11" fill="#4a5a50">10 m</text>
+      <text x="808" y="630" text-anchor="end" font-family="PingFang SC, sans-serif" font-size="11" fill="#8a938c">比赛区 13.41 × 6.10 m（44 × 20 ft）· 匹克球画线</text>
+    </svg>
+    <div class="plan-legend">
+      <span><i style="background:#f3ecdd;border-color:#a9814f;"></i>VVIP 独立房间（1 片）</span>
+      <span><i style="background:#eef2ee;border-color:#2d5240;"></i>VIP 联合空间（2 片）</span>
+      <span><i style="background:#d3ded3;border-color:#1e3328;"></i>主赛场 C2（1 片）</span>
+      <span><i style="background:#dfe9df;border-color:#9ab09a;"></i>竞赛标准场（4 片）</span>
+      <span><i style="background:#eef3ee;border-color:#9ab09a;"></i>场地间休息区</span>
+      <span><i style="background:#f0eee6;border-color:#8a938c;"></i>接待 / 社交 / 后勤</span>
+    </div>
+  </div>
+
+  <div class="img-card" style="margin-bottom:24px;">
+    <img src="renderings_v3/20_aerial_master.png" alt="全局俯瞰效果图">
+    <div class="cap"><b>轴测全局俯瞰</b>——8 片场地（5 片竞赛 + 2 片 VIP + 1 片 VVIP）、前台接待与社交区、更衣零售后勤的整体关系；所有场地为连续哑光运动硬地，画线为匹克球标准画线（外框 / 中网 / 两条非截击区线 / 发球区中线），无侧道、无多余线条，竞赛空间净高 9 m</div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:24px;">
+    <div class="img-card"><img src="renderings_v4/22_competition_daily.png" alt="竞赛整合空间"><div class="cap"><b>竞赛整合空间 · 日常模式</b>——5 片场地按 2-1-2 布局独立运营；两处球员休息区设置在中央 C2 画面纵深的前、后两侧，与轴测全局俯瞰的空间关系一致，净高 9 m</div></div>
+    <div class="img-card"><img src="renderings_v4/23_vvip_room.png" alt="VVIP 独立房间"><div class="cap"><b>VVIP 独立房间</b>——依据全局轴测右侧独立场地深化：一片完整球场、全高玻璃界面、橡木吸音端墙与底线休息区，约 19.42 × 10.00 m，净高 7 m</div></div>
+    <div class="img-card"><img src="renderings_v4/24_reception_social.png" alt="前台接待与社交区"><div class="cap"><b>前台接待与社交区</b>——依据全局轴测前部服务带深化：入口前台、Lounge、咖啡吧与 Pro Shop 连续衔接，约 225 m²，净高 4.2 m</div></div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:24px;">
+    <div class="img-card"><img src="renderings_v3/25_locker_room.png" alt="更衣室"><div class="cap"><b>更衣室</b>——开放、明亮的赛前赛后社交空间，以橡木、穿孔深绿金属与水磨石构成耐用而有活力的俱乐部体验</div></div>
+    <div class="img-card"><img src="renderings_v3/26_pro_shop.png" alt="Pro Shop"><div class="cap"><b>Pro Shop</b>——与前厅及社交区直接相连，集中展示球拍、球、握把与服装，强化到店体验与零售转化</div></div>
+    <div class="img-card"><img src="renderings_v3/27_restroom.png" alt="卫生间"><div class="cap"><b>卫生间</b>——以深绿釉面砖、暖木与水磨石延续整体语言，兼顾无障碍、耐久性与清洁维护</div></div>
+  </div>
+
+  <div class="callout"><b>出图顺序：</b>先定面积与层高 → 绘制按真实比例的整馆平面 → 再基于各区域实际尺寸、墙体与开口生成空间效果图。画线校核遵循标准匹克球线稿：外框、中网、两条非截击区线，以及仅位于底线与非截击区线之间的发球区中线；不设置网球侧道、羽毛球线或多余方格。效果图为意向表达，最终尺寸、画线与构造做法以本平面图及后续施工图为准。</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================= 06 竞赛空间与赛事模式 ================= -->
+<div class="section">
+  <div class="section-tag">06 / 竞赛空间与赛事模式</div>
+  <h2 class="serif">Competition Space &amp; Match Mode</h2>
+  <p class="section-intro">竞赛整合空间由 5 片标准场地构成（2-1-2 布局）。日常模式下可升降隔断降下，形成 5 片独立场地；赛事模式下隔断升起，36.58 × 30.00 m 竞赛区转换为一个主赛场。中央 C2 保留 20.00 × 11.00 m 赛事级比赛及缓冲范围，四周布置模块化临时看台，规划容量约 350–450 席。</p>
+
+  <div class="img-card" style="margin-bottom:24px;">
+    <img src="renderings_v4/21_tournament_main.png" alt="竞赛空间 · 赛事模式">
+    <div class="cap"><b>竞赛空间 · 赛事模式</b>——在同一 36.58 × 30.00 m 竞赛区内转换：中央 C2（20.00 × 11.00 m）四周设置 4–5 排模块化临时看台，最高观众视点约 3 m，规划约 350–450 席；实际席位数须结合疏散通道、消防核定、媒体与裁判席最终确定，竞赛空间净高 9 m</div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card"><div class="kicker">赛事模式</div><h4>单一主赛场</h4><p>隔断升起后，中央 C2 保留 20.00 × 11.00 m 赛事级比赛及缓冲范围，原五场区外围转换为四侧观赛与赛事运营空间。</p></div>
+    <div class="card"><div class="kicker">日常模式</div><h4>5 片独立场地</h4><p>隔断降下，5 片标准场地（18.29 × 9.14 m）独立运营；两处休息区位于中央场地画面纵深的前、后两侧，与轴测总图保持一致。</p></div>
+    <div class="card"><div class="kicker">观赛与转播</div><h4>约 350–450 个临时席位</h4><p>采用 4–5 排模块化伸缩看台，最高视点约 3 m，并预留疏散、裁判、媒体及直播机位；最终容量以专项消防与临建设计核定为准。</p></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================= 07 面积分配 ================= -->
+<div class="section">
+  <div class="section-tag">07 / 面积分配</div>
+  <h2 class="serif">Area Allocation · 2,200 m²</h2>
+  <p class="section-intro">建筑外廓 56.0 × 39.3 m ≈ 2,200 m²，为包含全部场地与配套的总面积。8 片场地为核心功能体量，其余为接待、社交与后勤。</p>
+  <table>
+    <tr><th>区域</th><th class="num">小计 (m²)</th><th class="num">占比</th></tr>
+    <tr><td>竞赛整合空间（5 片场地 + 中央休息区 + 内部动线）</td><td class="num">1,097</td><td class="num">49.9%</td></tr>
+    <tr><td>VIP 联合空间（2 片场地）</td><td class="num">388</td><td class="num">17.6%</td></tr>
+    <tr><td>VVIP 独立房间（1 片场地 + 独立休息 / 更衣）</td><td class="num">194</td><td class="num">8.8%</td></tr>
+    <tr><td>前台接待与社交区（前台 + Lounge + 咖啡酒吧 + 共享动线）</td><td class="num">225</td><td class="num">10.2%</td></tr>
+    <tr><td>更衣 / 零售 / 后勤（更衣室、Pro Shop、卫生间、储物、员工及内部流动）</td><td class="num">266</td><td class="num">12.1%</td></tr>
+    <tr><td>机电 / 机房</td><td class="num">30</td><td class="num">1.4%</td></tr>
+    <tr class="total"><td>合计</td><td class="num">2,200</td><td class="num">100%</td></tr>
+  </table>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================= 08 项目核心团队 ================= -->
+<div class="section">
+  <div class="section-tag">08 / 项目核心团队</div>
+  <h2 class="serif">Core Project Team</h2>
+  <p class="section-intro">Pigomax 核心团队兼具成熟的俱乐部运营经验与产业资源整合能力，可覆盖项目从选址研判、空间规划、筹建落地到开业运营及赛事活动的完整周期。</p>
+  <div class="grid-3">
+    <div class="card"><div class="kicker">运营实绩</div><h4>上海多店运营经验</h4><p>核心成员拥有在上海成功运营 5 家匹克球俱乐部及网球俱乐部的实战经验，对场馆筹建、会员运营、教培体系、赛事组织和日常经营具有成熟认知。</p></div>
+    <div class="card"><div class="kicker">资源网络</div><h4>多层级产业协同</h4><p>团队具备全球、全国及上海本地的匹克球产业上下游合作资源，可高效联动场地建设、器材供应、专业教练、赛事机构、品牌赞助与社群渠道。</p></div>
+    <div class="card"><div class="kicker">落地能力</div><h4>从方案到持续运营</h4><p>以真实运营数据和用户需求反向指导设计与投资决策，在保障专业标准的同时兼顾坪效、体验、赛事适配和长期经营的可持续性。</p></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================= 09 场地合作条件 ================= -->
+<div class="section">
+  <div class="section-tag">09 / 场地合作条件</div>
+  <h2 class="serif">Site Partnership Criteria</h2>
+  <p class="section-intro">为保障专业场地布置、赛事体验及商业运营效率，合作场地原则上应满足以下基础条件。具体项目可结合建筑结构、区位客群与改造条件进行综合评估。</p>
+  <div class="grid-3">
+    <div class="card card-dark"><div class="kicker">面积</div><h4>建议 2,000 m² 以上</h4><p>具备布置多片标准场地及接待、社交、更衣、零售和后勤配套的完整空间条件；更大面积有利于构建赛事与复合经营能力。</p></div>
+    <div class="card card-dark"><div class="kicker">净高</div><h4>不低于 7 m，理想 9 m 以上</h4><p>7 m 为基础运营条件；9 m 及以上更有利于满足高水平训练、专业赛事、灯光系统与转播设备的综合需求。</p></div>
+    <div class="card card-dark"><div class="kicker">交通</div><h4>核心客群通勤 ≤ 60 分钟</h4><p>场地应交通便利，上海市区中心客群单程通勤原则上控制在 1 小时以内；以公共交通或驾车 30 分钟内可达为理想条件。</p></div>
+  </div>
+  <div class="callout"><b>优先评估要素：</b>除面积、净高与区位外，团队还将综合评估柱网与结构荷载、消防疏散、停车条件、公共交通可达性、噪声影响、机电容量、改造周期及长期租赁稳定性，并据此形成项目专属的场馆规划与合作方案。</div>
+</div>
+
+<div class="footer">
+  <b>Pigomax</b> · 56.0 × 39.3 m（2,200 m²）· 8 Courts · 竞赛空间净高 9.0 m · 场馆设计提案<br>
+  项目负责人：Eric Tian<br>
+  投资预算、会员体系与定价、财务预测与风险，详见配套 Excel《PIGOMAX 财务模型 v1 · 会员制口径》。<br>
+  方案版本：v3（设计篇）· 2026
+</div>
+
+</body></html>
