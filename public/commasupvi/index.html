@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>commasup 视觉识别标准 VI · v1.4</title>
+<style>
+:root {
+  --ink: #1e3328;
+  --paper: #f4f1e8;
+  --paper-2: #ece8db;
+  --surface: #fffcf5;
+  --forest: #2d5240;
+  --gold: #b69c6c;
+  --gold-deep: #917043;
+  --gold-light: #c9b489;
+  --wood: #a9814f;
+  --grey: #9a9890;
+  --text-2: #4a5a50;
+  --muted: #8a938c;
+  --line: #cdd1c3;
+  --warn: #a05a2c;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 40px; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+.serif { font-family: Georgia, "Songti SC", serif; }
+
+/* ===== 布局 ===== */
+.layout { display: flex; min-height: 100vh; }
+aside {
+  width: 232px; flex-shrink: 0;
+  background: var(--ink); color: var(--paper);
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  padding: 28px 0 40px;
+}
+.brand { padding: 0 24px 22px; border-bottom: 1px solid rgba(244,241,232,.15); }
+.brand b { font-size: 21px; letter-spacing: -.5px; font-weight: 600; }
+.brand b i { color: var(--gold-light); font-style: normal; }
+.brand span { display: block; font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: rgba(244,241,232,.55); margin-top: 4px; }
+nav { padding-top: 14px; }
+nav a {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 7px 24px; color: rgba(244,241,232,.72);
+  text-decoration: none; font-size: 13px;
+  border-left: 3px solid transparent;
+}
+nav a i { font-style: normal; font-size: 10px; color: var(--gold-light); opacity: .8; width: 18px; flex-shrink: 0; }
+nav a:hover { color: var(--paper); }
+nav a.active { color: var(--paper); border-left-color: var(--gold-light); background: rgba(244,241,232,.06); }
+nav a.dim { opacity: .3; }
+main { flex: 1; min-width: 0; }
+
+/* ===== 顶部 ===== */
+.topbar {
+  padding: 18px 56px; border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+  background: var(--paper); position: sticky; top: 0; z-index: 20;
+}
+.topbar h1 { font-size: 15px; font-weight: 600; letter-spacing: .04em; }
+.topbar .ver { font-size: 12px; color: var(--muted); font-weight: 400; }
+
+/* ===== 章节 ===== */
+section { padding: 64px 56px 30px; max-width: 1100px; }
+section + section { border-top: 1px solid var(--line); }
+.s-tag { font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--forest); font-weight: 600; margin-bottom: 12px; }
+section h2 { font-size: 30px; font-weight: 600; letter-spacing: -.01em; margin-bottom: 14px; }
+.s-intro { font-size: 14.5px; color: var(--text-2); max-width: 800px; margin-bottom: 34px; }
+h3 { font-size: 15px; font-weight: 600; margin: 38px 0 16px; padding-top: 18px; border-top: 1px dashed var(--line); }
+h3:first-of-type { border-top: none; padding-top: 0; }
+p { font-size: 14px; }
+.grid { display: grid; gap: 18px; }
+.g2 { grid-template-columns: 1fr 1fr; }
+.g3 { grid-template-columns: repeat(3, 1fr); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; }
+.card h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.card p { font-size: 13px; color: var(--text-2); }
+.kicker { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--wood); font-weight: 600; margin-bottom: 6px; }
+.callout {
+  border-left: 3px solid var(--forest); background: var(--surface);
+  padding: 14px 20px; border-radius: 0 10px 10px 0; margin: 22px 0; font-size: 13.5px; color: var(--text-2);
+}
+.callout.warn { border-left-color: var(--warn); background: #faf3ea; }
+.callout b { color: var(--ink); }
+
+/* ===== 图片 ===== */
+.igrid { display: grid; gap: 18px; }
+.ig2 { grid-template-columns: 1fr 1fr; }
+.ig3 { grid-template-columns: repeat(3, 1fr); }
+figure { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+figure img { width: 100%; display: block; aspect-ratio: 16/10; object-fit: cover; }
+figcaption { padding: 12px 16px 14px; font-size: 12px; color: var(--muted); line-height: 1.65; }
+figcaption b { color: var(--ink); font-weight: 600; display: block; margin-bottom: 2px; font-size: 12.5px; }
+
+/* ===== 色板 ===== */
+.swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.sw { border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: var(--surface); cursor: pointer; transition: transform .12s; }
+.sw:hover { transform: translateY(-2px); }
+.sw .chip { height: 74px; display: flex; align-items: flex-end; padding: 8px 12px; font-size: 11px; letter-spacing: .05em; }
+.sw .meta { padding: 10px 12px; }
+.sw .meta b { display: block; font-size: 13px; }
+.sw .meta span { display: block; font-size: 11px; color: var(--muted); font-family: "SF Mono", Menlo, monospace; margin-top: 2px; }
+.sw .meta em { display: block; font-style: normal; font-size: 11px; color: var(--text-2); margin-top: 4px; line-height: 1.5; }
+.ratio-bar { display: flex; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); height: 54px; margin-top: 18px; font-size: 12px; }
+.ratio-bar div { display: flex; align-items: center; justify-content: center; gap: 6px; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; font-size: 13px; margin: 12px 0 4px; }
+th { background: var(--ink); color: var(--paper); text-align: left; padding: 9px 14px; font-weight: 500; font-size: 12px; letter-spacing: .04em; }
+td { padding: 9px 14px; border-top: 1px solid var(--line); color: var(--text-2); vertical-align: top; }
+td b { color: var(--ink); }
+.dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 7px; border: 1px solid rgba(0,0,0,.08); }
+
+/* ===== 字体样张 ===== */
+.spec { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px 26px; margin-bottom: 14px; }
+.spec .label { font-size: 11px; color: var(--muted); letter-spacing: .1em; margin-bottom: 8px; }
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.do, .dont { border-radius: 10px; padding: 18px 20px; font-size: 13px; }
+.do { background: #eef3ee; border: 1px solid #b9ccb9; }
+.dont { background: #f8efe7; border: 1px solid #dcc3ab; }
+.do b { color: var(--forest); } .dont b { color: var(--warn); }
+.do p, .dont p { margin: 6px 0 2px; }
+
+/* ===== 徽标样张 ===== */
+.logobox { display: flex; align-items: center; justify-content: center; border-radius: 10px; padding: 40px 20px; }
+.lb-light { background: var(--paper-2); border: 1px solid var(--line); }
+.lb-dark { background: var(--ink); }
+.wm { font-weight: 600; letter-spacing: -.02em; }
+.wm i { font-style: normal; color: var(--gold); }
+.lb-dark .wm { color: var(--paper); } .lb-dark .wm i { color: var(--gold-light); }
+.caps { font-size: 10px; letter-spacing: .35em; text-transform: uppercase; margin-top: 6px; color: var(--text-2); }
+.lb-dark .caps { color: rgba(244,241,232,.55); }
+.xmark { font-size: 26px; color: var(--gold); margin: 0 26px; font-weight: 300; }
+.lb-dark .xmark { color: var(--gold-light); }
+
+/* ===== 手机 UI ===== */
+.phones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.phone { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+.p-screen { width: 100%; max-width: 210px; height: 400px; margin: 0 auto; background: #fff; border: 2px solid var(--ink); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; font-size: 10px; box-shadow: 0 10px 24px rgba(30,51,40,.08); }
+.p-status { display: flex; justify-content: space-between; padding: 8px 14px 2px; color: #1e3328; font-weight: 600; }
+.p-body { flex: 1; padding: 8px 12px 0; overflow: hidden; }
+.p-hi { font-size: 14px; font-weight: 600; color: #1e3328; }
+.p-hi small { display: block; font-size: 9px; color: #999; font-weight: 400; }
+.p-search { background: #f5f5f5; border-radius: 8px; padding: 6px 10px; color: #999; margin-top: 8px; }
+.p-sec { font-size: 11px; font-weight: 600; color: #1e3328; margin: 12px 0 6px; display: flex; justify-content: space-between; }
+.p-sec span { color: #b69c6c; font-weight: 500; font-size: 9px; }
+.p-item { border: 1px solid #eee; border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+.p-item b { font-size: 10.5px; color: #1e3328; display: block; }
+.p-item small { color: #999; font-size: 9px; }
+.p-item .pr { color: #ff4d4f; font-weight: 600; }
+.p-btn { background: #1e3328; color: #f4f1e8; border-radius: 8px; text-align: center; padding: 8px; margin-top: 8px; font-weight: 500; }
+.p-btn.ghost { background: #fff; color: #1e3328; border: 1px solid #1e3328; margin-top: 6px; }
+.p-member { background: linear-gradient(150deg, #274534, #1e3328); border-radius: 12px; color: #f4f1e8; padding: 14px; margin-top: 8px; }
+.p-member .mt { font-size: 8px; letter-spacing: .2em; color: #c9b489; }
+.p-member .mn { font-size: 14px; font-weight: 600; margin-top: 4px; }
+.p-member .mrow { display: flex; gap: 8px; margin-top: 12px; }
+.p-member .mrow div { flex: 1; background: rgba(244,241,232,.1); border-radius: 6px; padding: 6px; text-align: center; font-size: 8.5px; color: #cfd8cf; }
+.p-member .mrow b { display: block; color: #c9b489; font-size: 11px; }
+.p-tabs { border-top: 1px solid #eee; display: flex; padding: 8px 0 12px; }
+.p-tabs b { flex: 1; text-align: center; color: #999; font-weight: 400; font-size: 9px; }
+.p-tabs b.on { color: #1e3328; font-weight: 600; }
+
+/* 幻灯片结构示意 */
+.slide { width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; position: relative; }
+.slide.s-dark { background: var(--ink); padding: 30px 32px; }
+.slide.s-dark .sl-eyebrow { font-size: 9px; letter-spacing: .3em; color: var(--gold-light); text-transform: uppercase; }
+.slide.s-dark .sl-title { color: var(--paper); font-size: 25px; line-height: 1.3; margin-top: 12px; }
+.slide.s-dark .sl-rule { width: 40px; height: 2px; background: var(--gold-light); margin-top: 16px; }
+.slide.s-dark .sl-foot { position: absolute; bottom: 12px; left: 32px; right: 32px; display: flex; justify-content: space-between; color: rgba(244,241,232,.45); font-size: 9px; }
+.slide.s-light { background: var(--paper); border: 1px solid var(--line); padding: 24px 26px; }
+.slide.s-light .sl-eyebrow { font-size: 9px; letter-spacing: .25em; color: var(--gold-deep); font-weight: 600; }
+.slide.s-light .sl-title { font-size: 18px; font-weight: 600; margin: 8px 0 12px; }
+.slide.s-light .sl-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.slide.s-light .sl-cards div { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px; }
+.slide.s-light .sl-cards b { display: block; font-size: 16px; color: var(--gold-deep); font-variant-numeric: tabular-nums; font-weight: 600; }
+.slide.s-light .sl-cards small { font-size: 9px; color: var(--muted); }
+.slide.s-light .sl-foot { position: absolute; bottom: 10px; left: 26px; right: 26px; display: flex; justify-content: space-between; color: var(--muted); font-size: 9px; }
+
+/* 表格示意 */
+.xls { border-radius: 8px; overflow: hidden; border: 1px solid var(--line); font-size: 12px; background: #fff; }
+.xls .xh { background: var(--ink); color: var(--paper); display: flex; }
+.xls .xh div { padding: 9px 14px; flex: 1.4; font-size: 11px; letter-spacing: .05em; }
+.xls .xh div:first-child { flex: 2; }
+.xls .xr { display: flex; border-top: 1px solid #e8e8e8; }
+.xls .xr div { padding: 8px 14px; flex: 1.4; color: #4a5a50; font-variant-numeric: tabular-nums; text-align: right; }
+.xls .xr div:first-child { flex: 2; text-align: left; }
+.xls .xr .in { background: #f3ecdd; color: #917043; }
+.xls .xr.total { background: #ece8db; font-weight: 600; color: #1e3328; border-top: 2px solid rgba(30,51,40,.3); }
+.xls .xnote { padding: 8px 14px; font-size: 10px; color: #8a938c; border-top: 1px solid #e8e8e8; }
+.xls .xnote b { color: #917043; font-weight: 500; }
+
+.copied { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 8px 20px; border-radius: 999px; font-size: 13px; z-index: 99; }
+
+footer { border-top: 1px solid var(--line); padding: 40px 56px 60px; font-size: 12px; color: var(--muted); }
+footer b { color: var(--ink); }
+
+@media (max-width: 1100px) { .swatches { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 860px) {
+  .layout { flex-direction: column; }
+  aside { position: static; width: 100%; height: auto; padding-bottom: 12px; }
+  nav { display: flex; flex-wrap: wrap; padding: 10px 16px 0; }
+  nav a { padding: 5px 10px; border-left: none; }
+  section, .topbar, footer { padding-left: 20px; padding-right: 20px; }
+  .g2, .g3, .do-dont, .ig2, .ig3, .phones { grid-template-columns: 1fr; }
+}
+@media print {
+  aside { display: none; }
+  .topbar { position: static; }
+  section { page-break-inside: avoid; }
+  figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<aside>
+  <div class="brand">
+    <b>commasup<i>.</i></b>
+    <span>Visual Identity v1.4</span>
+  </div>
+  <nav id="nav">
+    <a href="#s0"><i>00</i>如何使用本标准</a>
+    <a href="#s1"><i>01</i>品牌架构</a>
+    <a href="#s2"><i>02</i>色彩体系</a>
+    <a href="#s3"><i>03</i>字体与排版</a>
+    <a href="#s4"><i>04</i>版式组件</a>
+    <a href="#s5"><i>05</i>徽标与联名</a>
+    <a href="#s6"><i>06</i>场馆与空间</a>
+    <a href="#s7"><i>07</i>数字产品</a>
+    <a href="#s8"><i>08</i>文档物料</a>
+    <a href="#s9"><i>09</i>自有商品与零售</a>
+    <a href="#s10"><i>10</i>员工形象</a>
+    <a href="#s11"><i>11</i>办公室环境</a>
+  </nav>
+</aside>
+
+<main>
+<div class="topbar">
+  <h1>commasup 视觉识别标准 <span class="ver">v1.4 · 2026.10.24</span></h1>
+</div>
+
+<!-- ================= 00 ================= -->
+<section id="s0">
+  <div class="s-tag">00 / Guide</div>
+  <h2 class="serif">如何使用本标准</h2>
+  <p class="s-intro">这是 commasup 集团级视觉识别（VI）标准，适用于集团全部业务的视觉呈现：场馆、App 与小程序、自有商品、员工形象、文档物料与办公室环境。所有应用场景都以实景影像呈现参照，不做示意图形替代。</p>
+  <div class="grid g3">
+    <div class="card"><div class="kicker">范围</div><h4>管什么，不管什么</h4><p>管辖集团全部对内与对外的视觉产出：场馆与空间、App 与小程序、自有商品、员工形象、文档物料、办公室环境。第三方品牌的官方视觉不在管辖内，联名时本标准只约束己方部分。</p></div>
+    <div class="card"><div class="kicker">原则</div><h4>高级感来自纪律</h4><p>配色纪律、留白与灯光，而非贵价材料或复杂装饰。全集团只有一个墨绿、一张米白纸、一组金。任何新增颜色都需要在本标准中找到归属，找不到就不许用。</p></div>
+    <div class="card"><div class="kicker">优先级</div><h4>冲突时这样裁决</h4><p>本标准 &gt; 各业务线既有习惯 &gt; 个人偏好。新产出一律执行本标准；确需偏离的，须先书面说明理由并获得品牌负责人确认。</p></div>
+  </div>
+  <div class="callout"><b>关于图片：</b>图片是形态参照，用于判断"该长什么样"。具体项目的尺寸、构造、面料与打样以专项设计为准；颜色以实体色板对色，屏幕颜色不作为验收依据。</div>
+</section>
+
+<!-- ================= 01 ================= -->
+<section id="s1">
+  <div class="s-tag">01 / Brand Architecture</div>
+  <h2 class="serif">品牌架构</h2>
+  <p class="s-intro">集团是恒定层，业务品牌是可变层。本标准只规定视觉层级与使用规则，不依赖具体品牌名单；任何新的子品牌诞生即默认继承本标准。</p>
+  <div class="grid g2">
+    <div class="card">
+      <h4>三个层级</h4>
+      <table>
+        <tr><th>层级</th><th>内容</th><th>出现场合</th></tr>
+        <tr><td><b>集团层</b><br>commasup</td><td>恒定不变，是全部视觉的背书</td><td>集团介绍、文档页眉页脚、员工名片、包装小字标、办公室；一般不直接面向消费者</td></tr>
+        <tr><td><b>业务品牌层</b></td><td>各业务线子品牌，名称与构成可能随业务调整变化</td><td>场馆、产品、社群与传播物料；视觉上必须能被识别为同一家公司（色彩、字体、版式遵循本标准）</td></tr>
+        <tr><td><b>联名层</b></td><td>集团或子品牌与外部合作方的组合</td><td>合作场馆门头、联合活动、跨界合作；规则见第 05 章</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="card">
+        <h4>书写规则</h4>
+        <table>
+          <tr><th>对象</th><th>规范</th></tr>
+          <tr><td>集团名</td><td><b>commasup</b> —— 全小写，后缀金色句点。句点是品牌资产的一部分，不得变色、删除或替换。任何场合不得出现大写 S 或其他大小写混排变体。</td></tr>
+          <tr><td>子品牌</td><td>以官方字标的大小写为准，正文中不得随意改写大小写或增删符号。</td></tr>
+          <tr><td>中英并置</td><td>中文名称可作辅助注名，但字标本身不做中文化改造。</td></tr>
+        </table>
+      </div>
+      <div class="card" style="margin-top:18px;">
+        <h4>口号体系</h4>
+        <p>集团口号：<b>CONNECT ALL PLAYERS</b>（连接每一位球友，让每一个社区持续活跃），用于集团层物料。各业务品牌可在其下挂各自的副题，副题不得改写集团口号，也不得与集团口号竞争视觉权重。</p>
+      </div>
+    </div>
+  </div>
+  <div class="callout"><b>对外物料如需列举业务构成：</b>以当期集团官方口径为准，不从本标准取材。</div>
+</section>
+
+<!-- ================= 02 ================= -->
+<section id="s2">
+  <div class="s-tag">02 / Color</div>
+  <h2 class="serif">色彩体系</h2>
+  <p class="s-intro">全集团共用一套色板：深墨绿 + 米白贯穿始终；金色系统一为三阶；材质色只属于空间。点击任意色卡即可复制色值。</p>
+
+  <h3>核心色（全场景通用）</h3>
+  <div class="swatches">
+    <div class="sw" data-hex="#1E3328"><div class="chip" style="background:#1e3328;color:#f4f1e8;">INK · 墨绿</div><div class="meta"><b>墨绿 Ink</b><span>#1E3328</span><em>品牌主色。深色底、标题、主按钮、门头底色。</em></div></div>
+    <div class="sw" data-hex="#F4F1E8"><div class="chip" style="background:#f4f1e8;color:#1e3328;">PAPER · 米白</div><div class="meta"><b>米白 Paper</b><span>#F4F1E8</span><em>纸面底色。文档、网页、包装的默认背景。</em></div></div>
+    <div class="sw" data-hex="#2D5240"><div class="chip" style="background:#2d5240;color:#f4f1e8;">FOREST · 苔绿</div><div class="meta"><b>苔绿 Forest</b><span>#2D5240</span><em>次级绿。章节标签、次级强调、场地运动面。</em></div></div>
+    <div class="sw" data-hex="#B69C6C"><div class="chip" style="background:#b69c6c;color:#1e3328;">GOLD · 金</div><div class="meta"><b>金 Gold</b><span>#B69C6C</span><em>品牌强调色。logo 句点、分隔线、数字、联名符号。</em></div></div>
+  </div>
+
+  <h3>扩展色（有明确使用条件）</h3>
+  <div class="swatches">
+    <div class="sw" data-hex="#C9B489"><div class="chip" style="background:#c9b489;color:#1e3328;">GOLD-L</div><div class="meta"><b>浅金 Gold Light</b><span>#C9B489</span><em>仅限深绿底上替代 Gold 使用（对比度要求）。</em></div></div>
+    <div class="sw" data-hex="#917043"><div class="chip" style="background:#917043;color:#f4f1e8;">GOLD-D</div><div class="meta"><b>深金 Gold Deep</b><span>#917043</span><em>米白底上的 eyebrow 小标签与小型强调文字。</em></div></div>
+    <div class="sw" data-hex="#FFFCF5"><div class="chip" style="background:#fffcf5;color:#1e3328;">SURFACE</div><div class="meta"><b>暖白 Surface</b><span>#FFFCF5</span><em>卡片与浮层面板色，叠在米白底之上。</em></div></div>
+    <div class="sw" data-hex="#4A5A50"><div class="chip" style="background:#4a5a50;color:#f4f1e8;">TEXT-2</div><div class="meta"><b>正文绿灰</b><span>#4A5A50</span><em>浅底次级正文。更浅的辅助文字可用 #8A938C。</em></div></div>
+    <div class="sw" data-hex="#A9814F"><div class="chip" style="background:#a9814f;color:#f4f1e8;">WOOD</div><div class="meta"><b>橡木 Wood</b><span>#A9814F</span><em>仅限空间与商品的材质语境，不用于文档与 UI。</em></div></div>
+    <div class="sw" data-hex="#9A9890"><div class="chip" style="background:#9a9890;color:#1e3328;">CONCRETE</div><div class="meta"><b>水泥灰</b><span>#9A9890</span><em>空间中性材质（地面、金属、设备）。不做文档强调色。</em></div></div>
+    <div class="sw" data-hex="#A05A2C"><div class="chip" style="background:#a05a2c;color:#f4f1e8;">WARN</div><div class="meta"><b>警示赭</b><span>#A05A2C</span><em>警告、风险提示、禁止示例。</em></div></div>
+    <div class="sw" data-hex="#CDD1C3"><div class="chip" style="background:#cdd1c3;color:#1e3328;">LINE</div><div class="meta"><b>分隔线灰绿</b><span>#CDD1C3</span><em>浅底分隔线与边框；深底用 15% 米白透明度。</em></div></div>
+  </div>
+
+  <h3>使用比例与组合纪律</h3>
+  <div class="ratio-bar">
+    <div style="flex:6;background:#f4f1e8;color:#1e3328;">米白 / 暖白 约 60%</div>
+    <div style="flex:3;background:#1e3328;color:#f4f1e8;">墨绿 约 30%</div>
+    <div style="flex:1;background:#b69c6c;color:#1e3328;">金 10%</div>
+  </div>
+  <div class="grid g2" style="margin-top:18px;">
+    <div class="do">
+      <b>✓ 允许</b>
+      <p>· 墨绿底 + 米白字 + 浅金强调（深色模式）<br>· 米白底 + 墨绿字 + 深金小标签（浅色模式）<br>· 苔绿作为墨绿的"近亲"出现在章节标签与运动地面<br>· 金只做小面积点缀：线、点、数字、符号</p>
+    </div>
+    <div class="dont">
+      <b>✕ 禁止</b>
+      <p>· 引入色板之外的任何新色（蓝、紫、亮橙、荧光色）<br>· 金色大面积铺底或做正文颜色<br>· 苔绿与墨绿在文字层面互相混用（正文只用墨绿系）<br>· 纯白 #FFFFFF 做文档底色（用暖白 / 米白）</p>
+    </div>
+  </div>
+
+  <h3>功能色（不属于品牌色，仅用于状态语义）</h3>
+  <table>
+    <tr><th>用途</th><th>色值</th><th>说明</th></tr>
+    <tr><td>成功 / 已确认</td><td><span class="dot" style="background:#52C41A;"></span>#52C41A</td><td>仅限产品 UI 状态反馈，不做装饰</td></tr>
+    <tr><td>警告 / 待处理</td><td><span class="dot" style="background:#FAAD14;"></span>#FAAD14</td><td>同上</td></tr>
+    <tr><td>错误 / 风险</td><td><span class="dot" style="background:#8A4A32;"></span>#8A4A32（文档）· #FF4D4F（产品）</td><td>文档中风险文字用赭红；产品内错误态沿用现有红</td></tr>
+    <tr><td>价格</td><td><span class="dot" style="background:#FF4D4F;"></span>#FF4D4F</td><td>仅限产品内价格数字，遵循中国市场惯例</td></tr>
+  </table>
+</section>
+
+<!-- ================= 03 ================= -->
+<section id="s3">
+  <div class="s-tag">03 / Typography</div>
+  <h2 class="serif">字体与排版</h2>
+  <p class="s-intro">两个字族，各司其职：无衬线（苹方 / 思源黑体）承担全部正文与界面；衬线（Georgia / 宋体）只用于品牌陈述性的大标题。混用规则一旦确定，全集团不再有第二套。</p>
+
+  <div class="spec">
+    <div class="label">展示标题 · 衬线 · Georgia + Songti SC · 用于品牌陈述、章节大标题、场馆标语墙</div>
+    <div class="serif" style="font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1.15;">在公园边，共建上海球友的新主场。</div>
+  </div>
+  <div class="spec">
+    <div class="label">正文与界面 · 无衬线 · PingFang SC / Noto Sans SC · 行高 1.6–1.7</div>
+    <div style="font-size:16px;">理解每个人，建立有意义的连接。让适合他的球友、场地与活动，在生活中真实发生。</div>
+  </div>
+  <div class="spec">
+    <div class="label">eyebrow / kicker · 全大写 · 字距 0.2–0.35em · 深金或苔绿 · 10–12px</div>
+    <div style="font-size:11px;letter-spacing:.3em;color:#917043;font-weight:600;">A NEW HOME FOR EVERY PLAYER</div>
+  </div>
+  <div class="spec">
+    <div class="label">数字 · 一律启用 tabular-nums（等宽数字）· 财务与数据场景强制</div>
+    <div style="font-size:26px;font-variant-numeric:tabular-nums;font-weight:500;letter-spacing:-.01em;">2,200 m² · 8 片 · 9.0 m · ¥123.4 · 36.2%</div>
+  </div>
+
+  <h3>字阶（文档与网页）</h3>
+  <table>
+    <tr><th>层级</th><th>浅底</th><th>深底</th><th>备注</th></tr>
+    <tr><td>Hero 大标题</td><td class="serif">40–56px / 600</td><td class="serif">48–72px / 600</td><td>衬线；行高 1.05–1.3；字距 -0.02em</td></tr>
+    <tr><td>章节标题 H2</td><td>30–36px / 600</td><td>33px / 500</td><td>衬线或无衬线均可，同一文档内保持一致</td></tr>
+    <tr><td>小标题 H3</td><td>15–18px / 600</td><td>19–22px / 500</td><td>无衬线</td></tr>
+    <tr><td>正文</td><td>14–17px / 400</td><td>15–17px / 400</td><td>行高 1.6–1.7</td></tr>
+    <tr><td>说明 / caption</td><td>11–13px</td><td>11–13px</td><td>颜色用绿灰 / 浅金</td></tr>
+  </table>
+  <div class="callout warn"><b>禁用：</b>斜体中文、给正文加粗超过一处、用颜色和字号同时制造第四级以上的层级、letter-spacing 为负的小字号文本。英文标题可用全大写 + 宽字距，中文一律不用全大写概念（无意义）。</div>
+</section>
+
+<!-- ================= 04 ================= -->
+<section id="s4">
+  <div class="s-tag">04 / Layout & Components</div>
+  <h2 class="serif">版式与组件</h2>
+  <p class="s-intro">所有媒介共用的版式词汇：大量留白、细分隔线、卡片、eyebrow 引导语。装饰越少越好——没有徽章、没有标签云、没有无意义的图标。下方两组为版面结构示意，用于确认层级关系，不作为成品观感参照。</p>
+  <div class="grid g2">
+    <div class="card">
+      <h4>页面骨架</h4>
+      <p>① 顶部：eyebrow（编号 / 英文小标）→ 大标题（衬线优先）→ 一段引导语（限两句）。<br>② 主体：卡片网格（2–4 列）或整幅图片 / 图表。<br>③ 收尾：细线之下的备注、来源或版本信息。<br>页边距不小于版心宽度的 6%，正文行长不超过 42 个中文字符。</p>
+    </div>
+    <div class="card">
+      <h4>卡片与提示</h4>
+      <p>卡片：暖白 #FFFCF5，1px 灰绿描边，圆角 10px，内边距 20–30px；结构固定为 kicker 小标 → 标题 → 两三行说明。提示块：左侧 3px 竖线，苔绿 = 说明、警示赭 = 风险，是全集团唯一的提示样式。</p>
+    </div>
+  </div>
+  <div class="igrid ig2" style="margin-top:22px;">
+    <figure>
+      <div class="slide s-light" style="border:none;">
+        <div class="sl-eyebrow">04 / LAYOUT SYSTEM</div>
+        <div class="sl-title">同一套组件，贯穿所有浅色页面</div>
+        <div class="sl-cards">
+          <div><b>60%</b><small>米白基底</small></div>
+          <div><b>30%</b><small>墨绿结构</small></div>
+          <div><b>10%</b><small>金色点缀</small></div>
+        </div>
+        <div class="sl-foot"><span>commasup</span><span>04 / 12</span></div>
+      </div>
+      <figcaption><b>浅色内容页 · 结构示意</b>eyebrow + 标题 + 卡片行 + 页脚；金色只给关键数字。</figcaption>
+    </figure>
+    <figure>
+      <div class="slide s-dark" style="border:none;">
+        <div class="sl-eyebrow">Chapter Divider</div>
+        <div class="sl-title serif">用一页深色，<br>隔开每一个章节。</div>
+        <div class="sl-rule"></div>
+        <div class="sl-foot"><span>commasup</span><span>视觉体系</span></div>
+      </div>
+      <figcaption><b>深色章节页 · 结构示意</b>衬线大标题 + 金色短线，章节分隔专用，不放数据。</figcaption>
+    </figure>
+  </div>
+  <div class="callout"><b>数据可视化的用色：</b>图表主色 = 墨绿 + 苔绿双绿系，强调项 = 金，基准与网格 = 灰绿 #CDD1C3。多系列不超过 4 色，超出时用同色系深浅表达，禁止彩虹配色。</div>
+</section>
+
+<!-- ================= 05 ================= -->
+<section id="s5">
+  <div class="s-tag">05 / Logo & Co-branding</div>
+  <h2 class="serif">徽标与联名</h2>
+  <p class="s-intro">各品牌沿用各自现有字标，不重新设计；本标准规定集团字标的使用方式与一切联名组合的规则。下方联名样张中的 BRAND A / BRAND B 为占位字标，实际使用时替换为官方字标。</p>
+
+  <h3>集团字标</h3>
+  <div class="grid g2">
+    <div class="logobox lb-light"><div style="text-align:center;"><div class="wm" style="font-size:34px;color:#1e3328;">commasup<i>.</i></div><div class="caps">Connect All Players</div></div></div>
+    <div class="logobox lb-dark"><div style="text-align:center;"><div class="wm" style="font-size:34px;">commasup<i>.</i></div><div class="caps">Connect All Players</div></div></div>
+  </div>
+  <p style="margin-top:10px;">全小写 + 金色句点（不是 Commasup，也不是 CommaSup）。句点不得变色、删除或换成其他符号。深浅两版之外不做第三种配色；最小宽度 90px。</p>
+
+  <h3>联名组合规则</h3>
+  <div class="logobox lb-light" style="margin-bottom:10px;">
+    <div class="wm" style="font-size:30px;color:#1e3328;">BRAND A.</div>
+    <div class="xmark">×</div>
+    <div class="wm" style="font-size:30px;color:#1e3328;">BRAND B</div>
+  </div>
+  <div class="grid g2">
+    <div class="do">
+      <b>✓ 规则</b>
+      <p>· 连接符「×」用金色，两侧各留一个字高间距<br>· 双方字标视觉重量相等、基线对齐<br>· 各自保持官方字标的书写规则与既有识别<br>· 集团背书小字标（commasup.）可放角落，不参与主组合</p>
+    </div>
+    <div class="dont">
+      <b>✕ 禁止</b>
+      <p>· 改变任一字标的比例去"压过"另一方<br>· 用其他符号（+、&、/）替代金色 ×<br>· 三个以上品牌同框（需要时回到集团层先沟通）<br>· 为联名临时改色或重新描边合作方字标</p>
+    </div>
+  </div>
+  <div class="callout"><b>合作场馆的落地对照：</b>第 06 章门头实景图即为「主品牌 × 场馆名」双字标在深绿立面上的实际效果。合作相关的商业表述以当期合作政策为准，视觉物料不自行增删措辞；合作场馆物料统一由集团模板生成，合作方不得自行改动字标颜色与比例。</div>
+</section>
+
+<!-- ================= 06 ================= -->
+<section id="s6">
+  <div class="s-tag">06 / Venue & Space</div>
+  <h2 class="serif">场馆与空间</h2>
+  <p class="s-intro">所有场馆——旗舰大馆、社区店、公园店——共用同一套空间色彩纪律。高级感来自配色纪律与灯光，而非贵价材料。以下为该体系的真实空间影像。</p>
+  <div class="grid g2">
+    <div class="card">
+      <h4>四色空间体系</h4>
+      <p><span class="dot" style="background:#2d5240;"></span>深苔绿 #2D5240 —— 大面积墙面与运动地面<br>
+      <span class="dot" style="background:#f0ecdf;"></span>米白 #F0ECDF —— 辅助墙面（与纸面色同源）<br>
+      <span class="dot" style="background:#a9814f;"></span>橡木 #A9814F —— 仅视线水平带：接待台、包间端墙、吧台；不落地、不通高<br>
+      <span class="dot" style="background:#9a9890;"></span>水泥灰 #9A9890 —— 地面、金属与设备</p>
+    </div>
+    <div class="card">
+      <h4>材质与灯光</h4>
+      <p>· 比赛区：连续哑光运动硬地（苔绿），防滑无反光，缓冲区内外同材质<br>
+      · 前台 / 社交区：哑光微水泥，暖色不反光<br>
+      · 吊顶：裸顶深色喷涂 + 局部吸音棉，保留层高<br>
+      · 灯光：3000K 线性暖光，隐藏式洗墙；球场照明按赛事标准单独配置<br>
+      · 绿植：橄榄树 / 琴叶榕成列，替代艺术品与部分隔断</p>
+    </div>
+  </div>
+
+  <h3>空间应用 · 实景</h3>
+  <div class="igrid ig2">
+    <figure><img src="vi_assets/space_court_event_web.jpg" alt="赛事模式主赛场"><figcaption><b>主赛场 · 赛事模式</b>中央场地四周设置模块化看台；竞赛空间净高按赛事标准，深绿场地配米白画线，木饰面只出现在墙面中段与结构柱。</figcaption></figure>
+    <figure><img src="vi_assets/space_court_daily_web.jpg" alt="日常多场地布局"><figcaption><b>日常模式 · 多场地并行</b>可升降隔断降下后的独立运营状态；场地之间以绿植与长凳分隔，替代硬质隔墙。</figcaption></figure>
+    <figure><img src="vi_assets/space_reception_web.jpg" alt="前台与社交区"><figcaption><b>前台接待与社交区</b>前台、Lounge 与咖啡吧连成一个连续空间；橡木弧形接待台 + 暖光洗墙，沙发的墨绿与陶土色都在色板内。</figcaption></figure>
+    <figure><img src="vi_assets/space_retail_web.jpg" alt="零售与 Pro Shop"><figcaption><b>零售与 Pro Shop</b>深绿穿孔金属背板 + 橡木层架；商品按色板陈列，球拍与服装是空间里唯一的高饱和元素。</figcaption></figure>
+    <figure><img src="vi_assets/space_locker_web.jpg" alt="更衣室"><figcaption><b>更衣室</b>橡木、穿孔深绿金属与水磨石构成耐用而有活力的赛前赛后空间。</figcaption></figure>
+    <figure><img src="vi_assets/space_vvip_web.jpg" alt="独立包间场地"><figcaption><b>独立包间场地</b>全高玻璃界面、橡木吸音端墙与底线休息区；私密空间仍使用同一套材质与灯光语言。</figcaption></figure>
+  </div>
+
+  <h3>品牌在空间里的三个落点</h3>
+  <div class="igrid ig3">
+    <figure><img src="vi_assets/space_facade.jpg" alt="门头与夜立面"><figcaption><b>① 门头 / 夜立面</b>墨绿哑光金属板 + 橡木门框 + 米白石灰石基座；暖光从室内透出，是品牌最贵的一次曝光。</figcaption></figure>
+    <figure><img src="vi_assets/space_slogan.jpg" alt="标语墙"><figcaption><b>② 标语墙</b>深苔绿肌理墙 + 米白衬线标语 + 金色细线；标语只从集团口号体系选取。</figcaption></figure>
+    <figure><img src="vi_assets/space_signage.jpg" alt="导视系统"><figcaption><b>③ 导视系统</b>米白哑光面板 + 黄铜数字与箭头；编号一律 tabular，安装高度统一在视线水平带。</figcaption></figure>
+  </div>
+  <div class="callout warn"><b>红线：</b>任何场馆不得出现高光石材、彩色 LED 氛围灯、色板之外的涂装。场地画线只认所属运动的标准线稿，不同运动的画线不得混铺在同一片场地。</div>
+</section>
+
+<!-- ================= 07 ================= -->
+<section id="s7">
+  <div class="s-tag">07 / Digital Product</div>
+  <h2 class="serif">数字产品（App / 小程序 / Web）</h2>
+  <p class="s-intro">产品界面以可用性优先：白色基底 + 中性灰，品牌色出现在关键动作与品牌时刻，而不是铺满界面。这是与品牌物料（米白底）刻意区分的。以下三屏为同一产品的三个真实界面状态。</p>
+  <div class="phones">
+    <div class="phone">
+      <div class="p-screen">
+        <div class="p-status"><span>9:41</span><span>●●●</span></div>
+        <div class="p-body">
+          <div class="p-hi">早上好，球友<small>今天有 3 场可约</small></div>
+          <div class="p-search">搜索场馆 / 约球</div>
+          <div class="p-sec">今日可约 <span>查看全部</span></div>
+          <div class="p-item"><span><b>标准场 03</b><small>18:00 · 2/4 人</small></span><span class="pr">¥45</span></div>
+          <div class="p-item"><span><b>标准场 05</b><small>19:30 · 4/4 人</small></span><span class="pr">¥45</span></div>
+          <div class="p-btn">一键约球</div>
+        </div>
+        <div class="p-tabs"><b class="on">首页</b><b>订场</b><b>社区</b><b>我的</b></div>
+      </div>
+      <figcaption style="padding:10px 0 0;"><b style="display:block;font-size:12.5px;margin-bottom:2px;">首页</b>白底中性灰骨架；品牌墨绿只出现在主按钮与激活态。</figcaption>
+    </div>
+    <div class="phone">
+      <div class="p-screen">
+        <div class="p-status"><span>9:41</span><span>●●●</span></div>
+        <div class="p-body">
+          <div class="p-hi">我的会员</div>
+          <div class="p-member">
+            <div class="mt">MEMBERSHIP</div>
+            <div class="mn">全年畅打会员</div>
+            <div class="mrow">
+              <div><b>12</b>剩余场时</div>
+              <div><b>3</b>进行中预约</div>
+            </div>
+          </div>
+          <div class="p-sec">权益</div>
+          <div class="p-item"><span><b>跨馆通用</b><small>全部直营与合作场馆</small></span><span class="pr" style="color:#b69c6c;">✓</span></div>
+          <div class="p-item"><span><b>优先报名</b><small>活动开放前 24h</small></span><span class="pr" style="color:#b69c6c;">✓</span></div>
+          <div class="p-btn ghost">续费</div>
+        </div>
+        <div class="p-tabs"><b>首页</b><b>订场</b><b>社区</b><b class="on">我的</b></div>
+      </div>
+      <figcaption style="padding:10px 0 0;"><b style="display:block;font-size:12.5px;margin-bottom:2px;">会员卡</b>品牌时刻：墨绿渐变卡面 + 浅金数字；权益勾用金不用功能绿。</figcaption>
+    </div>
+    <div class="phone">
+      <div class="p-screen">
+        <div class="p-status"><span>9:41</span><span>●●●</span></div>
+        <div class="p-body">
+          <div class="p-hi">选择时段<small>周六 · 滨江店</small></div>
+          <div class="p-sec">18:00 – 22:00</div>
+          <div class="p-item"><span><b>18:00 – 19:00</b><small>标准场 03</small></span><span class="pr">¥45</span></div>
+          <div class="p-item" style="border-color:#1e3328;"><span><b>19:00 – 20:00</b><small>标准场 03</small></span><span class="pr">¥45</span></div>
+          <div class="p-item"><span><b>20:00 – 21:00</b><small>已满</small></span><small style="color:#ccc;">—</small></div>
+          <div class="p-item"><span><b>21:00 – 22:00</b><small>标准场 05</small></span><span class="pr">¥45</span></div>
+          <div class="p-btn">确认预约 · ¥135</div>
+        </div>
+        <div class="p-tabs"><b>首页</b><b class="on">订场</b><b>社区</b><b>我的</b></div>
+      </div>
+      <figcaption style="padding:10px 0 0;"><b style="display:block;font-size:12.5px;margin-bottom:2px;">订场</b>价格红仅用于价格数字；选中态用墨绿描边而非填色。</figcaption>
+    </div>
+  </div>
+  <table>
+    <tr><th>元素</th><th>规范</th></tr>
+    <tr><td>Tab bar</td><td>白底 1px 上边框；未激活 #999，激活墨绿；图标 24px 线性风格，笔画 1.5–2px</td></tr>
+    <tr><td>按钮层级</td><td>主按钮墨绿实底米白字；次按钮白底墨绿字 1px 描边；文字按钮苔绿</td></tr>
+    <tr><td>图标</td><td>线性、几何、无渐变；品牌强调用金，仅限会员 / 权益类图标</td></tr>
+    <tr><td>空态 / 引导</td><td>米白底 + 墨绿线性插画 + 金色小点缀；文案直接，不卖萌</td></tr>
+    <tr><td>令牌来源</td><td>所有产品端的颜色、圆角、字号以统一令牌文件为唯一来源；本标准修订时令牌文件随之更新并同步全端</td></tr>
+  </table>
+</section>
+
+<!-- ================= 08 ================= -->
+<section id="s8">
+  <div class="s-tag">08 / Documents</div>
+  <h2 class="serif">文档物料：呈现类与数据类</h2>
+  <p class="s-intro">对外与内部文档分两类：呈现类（演示文稿、Word / PDF 文稿、网页稿）重叙事与版式；数据类（Excel / 表格文件）重口径与可核算。两者共用色板与字体，页面语言各自固定。</p>
+
+  <h3>呈现类（演示 / Word / PDF）</h3>
+  <div class="igrid ig2">
+    <figure style="grid-column: span 2;">
+      <img src="vi_assets/doc_print.jpg" alt="印刷物料实拍" style="aspect-ratio:21/9;">
+      <figcaption><b>印刷物料 · 实拍</b>米白纸张 + 墨绿封面 + 黄铜夹与笔；纸张不要纯白，印品与屏幕色以打样对色为准。</figcaption>
+    </figure>
+    <figure>
+      <div class="slide s-dark" style="border:none;">
+        <div class="sl-eyebrow">A New Home For Every Player</div>
+        <div class="sl-title serif">在公园边，<br>共建上海球友的新主场。</div>
+        <div class="sl-rule"></div>
+        <div class="sl-foot"><span>commasup</span><span>01 / 21</span></div>
+      </div>
+      <figcaption><b>封面版式</b>墨绿满版 + 米白衬线大标题 + 金色 eyebrow；页脚含编号与日期。</figcaption>
+    </figure>
+    <figure>
+      <div class="slide s-light" style="border:none;">
+        <div class="sl-eyebrow">03 / 关键数字</div>
+        <div class="sl-title">一页只讲一个主张</div>
+        <div class="sl-cards">
+          <div><b>2,200</b><small>建筑面积 m²</small></div>
+          <div><b>8</b><small>标准场地 · 片</small></div>
+          <div><b>9.0</b><small>竞赛净高 m</small></div>
+        </div>
+        <div class="sl-foot"><span>口径说明置于页脚</span><span>03 / 21</span></div>
+      </div>
+      <figcaption><b>数据页版式</b>关键数字用深金大字；每页一个主张，口径说明固定放页脚。</figcaption>
+    </figure>
+  </div>
+  <div class="grid g2" style="margin-top:18px;">
+    <div class="card">
+      <h4>呈现类规则</h4>
+      <p>· 封面与章节页用深色版式（墨绿满版）；内容页用米白浅色版式<br>
+      · 页眉：品牌字标 + 英文小标；页脚：版本号 + 日期 + 口径说明<br>
+      · Word / PDF 正文：米白底、墨绿标题、绿灰正文；标题衬线、正文无衬线<br>
+      · 章节编号用「02 / 21」式金色小字</p>
+    </div>
+    <div class="card">
+      <h4>面向消费者的传播物料</h4>
+      <p>· 版式更松：大图 + 一句主文案（衬线）+ 一个动作按钮<br>
+      · 图像优先：真实场地与球友照片，调色偏暖、低饱和，与米白底自然衔接<br>
+      · 金色只用于价格锚点与权益标识<br>
+      · 禁止促销风撞色、爆炸贴、描边艺术字</p>
+    </div>
+  </div>
+
+  <h3>数据类（Excel / 表格文件）</h3>
+  <div class="igrid ig2">
+    <div class="xls">
+      <div class="xh"><div>科目</div><div>单价</div><div>数量</div><div>小计 / 元</div></div>
+      <div class="xr"><div>场时收入（黄金）</div><div class="in">123.4</div><div class="in">5,600</div><div>691,040</div></div>
+      <div class="xr"><div>场时收入（非黄金）</div><div class="in">88.0</div><div class="in">4,200</div><div>369,600</div></div>
+      <div class="xr"><div>卖水收入</div><div class="in">3.0</div><div class="in">19,600</div><div>58,800</div></div>
+      <div class="xr total"><div>年度收入合计</div><div></div><div></div><div>1,119,440</div></div>
+      <div class="xnote">口径：<b>黄金时段</b> = 工作日 18:00–22:00 及周末全天；来源标注于假设表。</div>
+    </div>
+    <div class="card">
+      <h4>数据类规则</h4>
+      <p>· 表头行墨绿底米白字；输入单元格浅金底 #F3ECDD；公式单元格白底；结果行米白加深<br>
+      · 数字右对齐 + tabular，单位统一在表头注明（万元 / 元 / %）<br>
+      · 关键假设用深金文字标注来源；每表首行注明口径与版本<br>
+      · 同一工作簿内禁止出现第二套表头配色</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 09 ================= -->
+<section id="s9">
+  <div class="s-tag">09 / Merchandise & Retail</div>
+  <h2 class="serif">自有商品与零售</h2>
+  <p class="s-intro">自有商品（tee、卫衣、帽、球、握把、水杯）与零售陈列遵循"一色一印"原则：产品本体只用色板内的颜色，印刷只用一种品牌色。以下为按本标准拍摄的实物参照。</p>
+
+  <div class="igrid ig2">
+    <figure><img src="vi_assets/goods_campaign.jpg" alt="球场上的球员着装"><figcaption><b>场上着装</b>墨绿与米白两色成组出现，同一画面里不超过两种身体色；下装用米白平衡。</figcaption></figure>
+    <figure><img src="vi_assets/goods_flats.jpg" alt="服装平铺"><figcaption><b>基础款平铺</b>深墨绿 / 米白两色 tee，配水泥灰与米白两顶帽交替拼色；胸前一处极小金色标记，无大面积印花。</figcaption></figure>
+    <figure><img src="vi_assets/goods_cap.jpg" alt="帽子产品图"><figcaption><b>帽</b>水泥灰帽身 + 米白帽檐 + 黄铜气眼；帽类永不以绿色为主色（见下方红线），灰与米白的拼色已足够辨识。</figcaption></figure>
+    <figure><img src="vi_assets/goods_packaging.jpg" alt="包装与吊牌"><figcaption><b>包装与吊牌</b>墨绿礼盒 + 金色单线 + 米白棉布袋；吊牌用黄铜材质，文字单色压印。</figcaption></figure>
+  </div>
+
+  <div class="callout warn"><b>头部配件红线（文化约束，优先于配色偏好）：</b>帽、发带、头巾等一切戴在头上的用品，<b>主色不得为绿色</b>——中文语境中「绿帽子」带有强烈负面含义，消费者不会为带这层联想的商品付溢价。帽类可用：米白、水泥灰、橡木棕三色，两两拼色即可做出足够的产品线。墨绿只允许出现在檐口内衬、调节织带内侧、缝线等不外露的细节上，且露出面积不得超过整帽的 5%。本条与"墨绿是品牌主色"不冲突：品牌主色管的是品牌表达，商品主色管的是能不能卖出去。
+  </div>
+
+  <div class="grid g2" style="margin-top:20px;">
+    <div class="card">
+      <div class="kicker">服装</div>
+      <h4>身体件四色，头部件禁绿</h4>
+      <p><b>tee / 卫衣 / 毛巾</b>：墨绿、米白、水泥灰、橡木棕四选一。<b>帽 / 发带</b>：只用米白、水泥灰、橡木棕，绿色不进入头部件主色。正面印刷仅一处：小号字标或「×」联名符号，金或米白单色；后背可放大号标语（衬线）。禁止多色印花与渐变。</p>
+    </div>
+    <div class="card">
+      <div class="kicker">器材与陈列</div>
+      <h4>包装与零售</h4>
+      <p>竞赛用球维持各自运动的标准亮色（竞技功能优先，不受色板限制）；包装墨绿底 + 米白字标 + 金色单线。货架与道具用水泥灰与橡木，价签米白底墨绿字、会员价金色，灯光 3000K 与场馆一致。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 10 ================= -->
+<section id="s10">
+  <div class="s-tag">10 / People</div>
+  <h2 class="serif">员工形象</h2>
+  <p class="s-intro">员工的视觉是被看见次数最多的品牌触点。原则：克制、耐脏、一眼可识别身份。</p>
+  <div class="igrid ig2">
+    <figure><img src="vi_assets/goods_uniform.jpg" alt="工服 · 卫衣"><figcaption><b>工服 · 卫衣（秋冬）</b>深墨绿重磅连帽卫衣 + 米白内搭 + 水泥灰长裤 + 墨绿挂绳工牌；正面无任何印花，识别靠版型、颜色与工牌。</figcaption></figure>
+    <figure><img src="vi_assets/people_badge.jpg" alt="工牌与名片"><figcaption><b>工牌与名片</b>竖版米白工牌 + 墨绿挂绳；名片米白卡纸、单点金箔；同一批次下单，避免色差。</figcaption></figure>
+  </div>
+  <div class="grid g2" style="margin-top:20px;">
+    <div class="card">
+      <h4>工服：夏 tee / 冬卫衣</h4>
+      <p>· <b>夏季（tee）</b>：教练与前台墨绿 tee（胸前米白小字标）+ 水泥灰或米白下装；赛事工作人员米白 tee + 墨绿字标<br>
+      · <b>秋冬（卫衣 / 外套）</b>：同版型做两色——深墨绿连帽卫衣给一线与前台，米白卫衣给赛事与活动支援；外穿时内搭必须是米白或水泥灰，领口露出窄边形成层次<br>
+      · <b>头部配件</b>（帽 / 发带 / 头巾）一律禁绿，按第 09 章红线执行<br>
+      · 总部与商务：不设统一工服，深色正装 + 品牌色小物（口袋巾、笔、徽章用金）</p>
+    </div>
+    <div class="card">
+      <h4>工牌与挂绳</h4>
+      <p>· 工牌：竖版，米白底，顶部金色职能小标，姓名墨绿大字<br>
+      · 挂绳按身份分色：场馆运营墨绿、赛事浅金、总部与商务深金——颜色从色板内取，不新增色<br>
+      · 访客牌用水泥灰底，与员工牌一眼区分</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 11 ================= -->
+<section id="s11">
+  <div class="s-tag">11 / Office</div>
+  <h2 class="serif">办公室环境</h2>
+  <p class="s-intro">办公室是集团品牌密度最高的室内场景，直接沿用第 06 章空间语言，但更轻：不需要运动地面，材料换成办公尺度的橡木与织物。</p>
+  <div class="igrid ig2">
+    <figure><img src="vi_assets/office_open.jpg" alt="开放办公区"><figcaption><b>开放办公区</b>一面墨绿主墙 + 米白墙面 + 橡木长桌；暖光斜切墙面，橄榄树与琴叶榕作为隔断。</figcaption></figure>
+    <figure><img src="vi_assets/office_meeting.jpg" alt="会议室"><figcaption><b>会议室</b>深绿吸音毡墙 + 橡木长桌 + 米白软包椅；一支橄榄枝替代装饰画，无电视墙以外的视觉噪音。</figcaption></figure>
+  </div>
+  <div class="grid g3" style="margin-top:20px;">
+    <div class="card">
+      <h4>墙面与地面</h4>
+      <p>一面主墙墨绿（可上米白衬线标语），其余米白；前台背景可用橡木饰面。地面用哑光水泥或浅色木地板，不用高光砖。</p>
+    </div>
+    <div class="card">
+      <h4>标识与细节</h4>
+      <p>会议室以编号命名（01 / 02 / 03…），门牌墨绿底米白字、编号金色；线缆与收纳统一水泥灰。</p>
+    </div>
+    <div class="card">
+      <h4>常用物料</h4>
+      <p>笔记本、文件夹、纸杯、鼠标垫：米白或墨绿底单色印刷；纪念品按第 09 章商品规则。统一供应商模板下单。</p>
+    </div>
+  </div>
+</section>
+<footer>
+  <b>commasup 视觉识别标准 v1.4</b> · 2026.10.24<br>
+  图像文件存于同目录 <code>vi_assets/</code>，可单独取用。支持浏览器打印 / 导出 PDF（侧栏自动隐藏）。色卡点击即复制。
+</footer>
+</main>
+</div>
+
+<script>
+'use strict';
+document.querySelectorAll('.sw').forEach(el => {
+  el.title = '点击复制 ' + el.dataset.hex;
+  el.addEventListener('click', () => {
+    const done = () => {
+      const t = document.createElement('div');
+      t.className = 'copied';
+      t.textContent = '已复制 ' + el.dataset.hex;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 1200);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(el.dataset.hex).then(done);
+    else {
+      const ta = document.createElement('textarea');
+      ta.value = el.dataset.hex; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy'); ta.remove(); done();
+    }
+  });
+});
+
+const navLinks = [...document.querySelectorAll('#nav a')];
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+document.querySelectorAll('main section').forEach(s => io.observe(s));
+</script>
+</body>
+</html>
