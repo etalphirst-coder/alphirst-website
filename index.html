@@ -25,8 +25,8 @@
     --charcoal-30: rgba(21, 21, 22, .3);
     --sage: #657a54;
     --hairline: 1px solid #151516;
-    --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
-    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --serif: "Source Serif 4", "Songti SC", "Noto Serif SC", "STSong", "Iowan Old Style", Georgia, serif;
+    --sans: "Inter", -apple-system, "PingFang SC", BlinkMacSystemFont, "Segoe UI", sans-serif;
     --gutter: clamp(20px, 5.5vw, 80px);
     --maxw: 1680px;
   }
@@ -49,6 +49,32 @@
   .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .28em; text-transform: uppercase; color: var(--sage); }
   .micro { font-size: 10px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
 
+  /* ————— Language switch ————— */
+  .lang-switch { display: flex; align-items: baseline; gap: 7px; }
+  .lang-switch button {
+    background: none; border: 0; cursor: pointer; padding: 0 0 3px;
+    font-family: var(--sans); font-size: 11px; font-weight: 700;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--charcoal-30); position: relative; transition: color .3s ease;
+  }
+  .lang-switch button:hover { color: var(--charcoal-70); }
+  .lang-switch button.active { color: var(--charcoal); }
+  .lang-switch button.active::after {
+    content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; background: var(--sage);
+  }
+  .lang-switch .sep { color: var(--charcoal-30); font-weight: 400; font-size: 11px; }
+
+  /* Chinese typography adjustments */
+  html[lang="zh-CN"] body { letter-spacing: .04em; }
+  html[lang="zh-CN"] .hero h1 { font-size: clamp(40px, 7vw, 132px); letter-spacing: 0; }
+  html[lang="zh-CN"] .hero h1 .line-2 { font-style: normal; }
+  html[lang="zh-CN"] .section-head h2, html[lang="zh-CN"] .contact-grid h2 { letter-spacing: 0; }
+  html[lang="zh-CN"] .contact-grid h2 { font-size: clamp(36px, 5.4vw, 88px); }
+  html[lang="zh-CN"] .hero h1 em, html[lang="zh-CN"] .section-head h2 em, html[lang="zh-CN"] .contact-grid h2 em { font-style: normal; }
+  html[lang="zh-CN"] .menu-list a { letter-spacing: 0; }
+  html[lang="zh-CN"] .menu-list a:hover { font-style: normal; }
+  html[lang="zh-CN"] .service .num, html[lang="zh-CN"] .case-index { letter-spacing: 0; }
+
   /* ————— Hairline system ————— */
   .hline { position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: #151516; transform: scaleX(0); transform-origin: left; transition: transform 1.6s cubic-bezier(.22,.61,.36,1); }
   .hline.from-right { transform-origin: right; left: auto; right: 0; }
@@ -66,7 +92,7 @@
   header.site { position: fixed; top: 0; left: 0; right: 0; z-index: 90; background: var(--cream); }
   .header-inner { max-width: 1520px; margin: 0 auto; height: 88px; display: flex; align-items: center; padding: 0 var(--gutter); position: relative; }
   .header-col { flex: 1; display: flex; align-items: center; }
-  .header-col.right { justify-content: flex-end; }
+  .header-col.right { justify-content: flex-end; gap: 28px; }
   .menu-btn, .header-mail {
     font-size: 11px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase;
     background: none; border: 0; cursor: pointer; color: var(--charcoal);
@@ -125,8 +151,7 @@
     position: relative;
   }
   .hero h1 .line { display: block; position: relative; }
-  .hero h1 .line-2 { text-align: right; padding-right: 3vw; font-style: italic; color: var(--sage); }
-  .hero h1 .line-3 { text-align: left; }
+  .hero h1 .line-2 { font-style: italic; color: var(--sage); }
   .hero-sub { margin-top: clamp(36px, 5vw, 72px); display: flex; flex-wrap: wrap; align-items: flex-end; gap: 40px; justify-content: space-between; }
   .hero-sub p { max-width: 560px; font-size: 17px; line-height: 1.7; color: var(--charcoal-70); }
   .btn-line {
@@ -205,7 +230,7 @@
   .case { display: block; }
   .case-figure { position: relative; background: #fff; }
   .case-figure img { width: 100%; height: auto; }
-  .case-meta { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 12px; padding: 18px 0 0; border-top: 1px solid var(--charcoal-30); }
+  .case-meta { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 12px; padding: 18px 0 16px; border-bottom: 1px solid var(--charcoal-30); }
   .case-type { font-size: 10px; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--sage); }
   .case h4 { font-family: var(--serif); font-weight: 400; letter-spacing: -.015em; font-size: clamp(24px, 2.6vw, 38px); margin: 6px 0 8px; }
   .case-sub { font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--charcoal-50); }
@@ -223,7 +248,7 @@
   @keyframes scroll-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   /* ————— Contact ————— */
-  .contact-sec { padding: clamp(52px, 6.5vw, 104px) 0 clamp(44px, 5.5vw, 88px); }
+  .contact-sec { padding-block: clamp(52px, 6.5vw, 104px) clamp(44px, 5.5vw, 88px); }
   .contact-grid {
     display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
     gap: clamp(26px, 3vw, 56px); align-items: end;
@@ -266,6 +291,7 @@
   @media (max-width: 900px) {
     .header-inner { height: 72px; }
     .header-logo img { height: 28px; }
+    .header-col.right { gap: 18px; }
     .hero { padding-top: 104px; }
     .hero h1 .line-2 { padding-right: 0; }
     .grid3 { grid-template-columns: 1fr; }
@@ -303,28 +329,35 @@
 <!-- ————— Header ————— -->
 <header class="site">
   <div class="header-inner">
-    <div class="header-col"><button class="menu-btn" id="menuBtn">Menu</button></div>
+    <div class="header-col"><button class="menu-btn" id="menuBtn" data-i18n="nav_menu">Menu</button></div>
     <div class="header-col header-logo">
       <a href="#home" aria-label="Alphirst home"><img src="assets/alphirst-logo.png" alt="Alphirst Logo"></a>
     </div>
-    <div class="header-col right"><a class="header-mail" href="mailto:info@alphirst.com">Contact</a></div>
+    <div class="header-col right">
+      <div class="lang-switch" role="group" aria-label="Language / 语言">
+        <button type="button" data-lang="en" aria-label="English">EN</button>
+        <span class="sep" aria-hidden="true">/</span>
+        <button type="button" data-lang="zh" aria-label="中文">中文</button>
+      </div>
+      <a class="header-mail" href="mailto:info@alphirst.com" data-i18n="nav_contact">Contact</a>
+    </div>
     <div class="header-rule-track"><div class="header-rule" id="headerRule" style="transition: width 0.15s linear; width: 100%;"></div></div>
   </div>
 </header>
 
 <!-- Full-screen menu -->
 <div class="menu-overlay" id="menuOverlay" aria-hidden="true">
-  <button class="menu-close" id="menuClose">Close</button>
+  <button class="menu-close" id="menuClose" data-i18n="menu_close">Close</button>
   <div class="wrap">
     <ul class="menu-list">
-      <li><a href="#home"><span class="idx">01</span>Home</a></li>
-      <li><a href="#services"><span class="idx">02</span>Services</a></li>
-      <li><a href="#portfolio"><span class="idx">03</span>Portfolio</a></li>
-      <li><a href="#contact"><span class="idx">04</span>Contact</a></li>
+      <li><a href="#home"><span class="idx">01</span><span data-i18n="menu_home">Home</span></a></li>
+      <li><a href="#services"><span class="idx">02</span><span data-i18n="menu_services">Services</span></a></li>
+      <li><a href="#portfolio"><span class="idx">03</span><span data-i18n="menu_portfolio">Portfolio</span></a></li>
+      <li><a href="#contact"><span class="idx">04</span><span data-i18n="menu_contact">Contact</span></a></li>
     </ul>
     <div class="menu-foot">
       <span>info@alphirst.com</span>
-      <span>Shanghai / Bangkok</span>
+      <span data-i18n="menu_loc">Shanghai / Bangkok</span>
     </div>
   </div>
 </div>
@@ -333,14 +366,14 @@
   <!-- ————— Hero ————— -->
   <section id="home" class="hero wrap">
     <h1>
-      <span class="line line-1 reveal is-visible">Translating</span>
-      <span class="line line-2 reveal d1 is-visible">Unfair Edge</span>
-      <span class="line line-3 reveal d2 is-visible">into Market Dominance.</span>
+      <span class="line line-1 reveal is-visible" data-i18n="hero_l1">Translating</span>
+      <span class="line line-2 reveal d1 is-visible" data-i18n="hero_l2">Unfair Edge</span>
+      <span class="line line-3 reveal d2 is-visible" data-i18n="hero_l3">into Market Dominance.</span>
     </h1>
     <div class="hero-sub">
-      <p class="reveal d3 is-visible">We empower established brands and nurture startups by weaponizing competitive advantages in elite IP and disruptive social commerce.​</p>
+      <p class="reveal d3 is-visible" data-i18n="hero_p">We empower established brands and nurture startups by weaponizing competitive advantages in elite IP and disruptive social commerce.​</p>
       <div style="display:flex;flex-direction:column;gap:26px;align-items:flex-start">
-        <a class="btn-line reveal d3 is-visible" href="#services">Explore Capabilities <span class="arrow">→</span></a>
+        <a class="btn-line reveal d3 is-visible" href="#services"><span data-i18n="hero_cta">Explore Capabilities</span> <span class="arrow">→</span></a>
 
       </div>
     </div>
@@ -359,8 +392,8 @@
   <section id="services" class="wrap" style="position:relative">
     <div class="hline is-visible" data-hline=""></div>
     <div class="section-head">
-      <span class="eyebrow reveal is-visible">Strategic Solutions</span>
-      <h2 class="reveal d1 is-visible">Weaponizing the <em>Unfair Advantage</em></h2>
+      <span class="eyebrow reveal is-visible" data-i18n="serv_eyebrow">Strategic Solutions</span>
+      <h2 class="reveal d1 is-visible" data-i18n="serv_h2">Weaponizing the <em>Unfair Advantage</em></h2>
     </div>
     <div class="services-grid">
       <div class="vline is-visible" style="left:calc(33.333% - 1px)" data-vline=""></div>
@@ -372,9 +405,9 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"></circle><path d="M8.6 12.4 7 21l5-2.6L17 21l-1.6-8.6"></path></svg>
         </div>
         <div>
-          <h4>Elite IP Synergy</h4>
-          <p>Weaponizing global titans from entertainment, sports, and contemporary art into your brand DNA.</p>
-          <div class="tags"><span>Celebrity Strategy</span><span>Global Artist Collaborations</span><span>Cultural IP Integration</span></div>
+          <h4 data-i18n="s1_h4">Elite IP Synergy</h4>
+          <p data-i18n="s1_p">Weaponizing global titans from entertainment, sports, and contemporary art into your brand DNA.</p>
+          <div class="tags"><span data-i18n="s1_t1">Celebrity Strategy</span><span data-i18n="s1_t2">Global Artist Collaborations</span><span data-i18n="s1_t3">Cultural IP Integration</span></div>
         </div>
       </article>
       <article class="service reveal d1 is-visible">
@@ -383,9 +416,9 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-8"></path><path d="M15 8h5v5"></path></svg>
         </div>
         <div>
-          <h4>Performance Social-Commerce</h4>
-          <p>Aggressive, ROI-driven KOL matrix management and high-impact physical activations that convert.</p>
-          <div class="tags"><span>ROI-Driven KOL Matrix</span><span>Impact Offline Popups</span><span>Omnichannel Growth</span></div>
+          <h4 data-i18n="s2_h4">Performance Social-Commerce</h4>
+          <p data-i18n="s2_p">Aggressive, ROI-driven KOL matrix management and high-impact physical activations that convert.</p>
+          <div class="tags"><span data-i18n="s2_t1">ROI-Driven KOL Matrix</span><span data-i18n="s2_t2">Impact Offline Popups</span><span data-i18n="s2_t3">Omnichannel Growth</span></div>
         </div>
       </article>
       <article class="service reveal d2 is-visible">
@@ -394,9 +427,9 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="1"></rect><path d="M3 9h18M8 4v5M8 13h8"></path></svg>
         </div>
         <div>
-          <h4>Next-Gen CRM Ecosystems</h4>
-          <p>Bespoke digitalization of brand assets and private traffic development through custom tech architecture.</p>
-          <div class="tags"><span>CRM Tech Architecture</span><span>Private Traffic Operation</span><span>Digital Asset Management</span></div>
+          <h4 data-i18n="s3_h4">Next-Gen CRM Ecosystems</h4>
+          <p data-i18n="s3_p">Bespoke digitalization of brand assets and private traffic development through custom tech architecture.</p>
+          <div class="tags"><span data-i18n="s3_t1">CRM Tech Architecture</span><span data-i18n="s3_t2">Private Traffic Operation</span><span data-i18n="s3_t3">Digital Asset Management</span></div>
         </div>
       </article>
     </div>
@@ -407,8 +440,8 @@
   <section id="portfolio" class="wrap" style="position:relative">
     <div class="hline from-right is-visible" data-hline=""></div>
     <div class="section-head">
-      <span class="eyebrow reveal is-visible">Elite Activations</span>
-      <h2 class="reveal d1 is-visible">Global Impact <em>Portfolio</em></h2>
+      <span class="eyebrow reveal is-visible" data-i18n="pf_eyebrow">Elite Activations</span>
+      <h2 class="reveal d1 is-visible" data-i18n="pf_h2">Global Impact <em>Portfolio</em></h2>
     </div>
     <div class="portfolio-grid">
 
@@ -416,9 +449,9 @@
         <div class="case-figure"><img src="assets/01-rain-plaza66.jpg" alt="Rain x Plaza 66 — Celebrity Driven Luxury Activation, Shanghai" loading="lazy"></div>
         <div class="case-meta">
           <div>
-            <span class="case-type">Global IP</span>
-            <h4>Rain x Plaza 66</h4>
-            <span class="case-sub">Celebrity Driven Luxury Activation / SH</span>
+            <span class="case-type" data-i18n="c1_type">Global IP</span>
+            <h4 data-i18n="c1_h4">Rain x Plaza 66</h4>
+            <span class="case-sub" data-i18n="c1_sub">Celebrity Driven Luxury Activation / SH</span>
           </div>
           <span class="case-index">( 01 )</span>
         </div>
@@ -428,9 +461,9 @@
         <div class="case-figure"><img src="assets/02-murakami.jpg" alt="Murakami Takashi — Ohana Hatake Global Pop-up Synergy" loading="lazy"></div>
         <div class="case-meta">
           <div>
-            <span class="case-type">Elite Artist</span>
-            <h4>Murakami Takashi</h4>
-            <span class="case-sub">Ohana Hatake Global Pop-up Synergy</span>
+            <span class="case-type" data-i18n="c2_type">Elite Artist</span>
+            <h4 data-i18n="c2_h4">Murakami Takashi</h4>
+            <span class="case-sub" data-i18n="c2_sub">Ohana Hatake Global Pop-up Synergy</span>
           </div>
           <span class="case-index">( 02 )</span>
         </div>
@@ -440,9 +473,9 @@
         <div class="case-figure"><img src="assets/03-sports-endorsement.jpg" alt="Sports Endorsement — Legacy IP x Tech Platform Integration" loading="lazy"></div>
         <div class="case-meta">
           <div>
-            <span class="case-type">Sport IP</span>
-            <h4>Sports Endorsement</h4>
-            <span class="case-sub">Legacy IP x Tech Platform Integration</span>
+            <span class="case-type" data-i18n="c3_type">Sport IP</span>
+            <h4 data-i18n="c3_h4">Sports Endorsement</h4>
+            <span class="case-sub" data-i18n="c3_sub">Legacy IP x Tech Platform Integration</span>
           </div>
           <span class="case-index">( 03 )</span>
         </div>
@@ -452,9 +485,9 @@
         <div class="case-figure"><img src="assets/04-kpop-activation.jpg" alt="Kpop Activation — K-Pop Identity Synchronization" loading="lazy"></div>
         <div class="case-meta">
           <div>
-            <span class="case-type">Entertainment</span>
-            <h4>Kpop Activation</h4>
-            <span class="case-sub">K-Pop Identity Synchronization</span>
+            <span class="case-type" data-i18n="c4_type">Entertainment</span>
+            <h4 data-i18n="c4_h4">Kpop Activation</h4>
+            <span class="case-sub" data-i18n="c4_sub">K-Pop Identity Synchronization</span>
           </div>
           <span class="case-index">( 04 )</span>
         </div>
@@ -464,9 +497,9 @@
         <div class="case-figure"><img src="assets/05-global-ip-deal.jpg" alt="Global IP Deal — Doraemon Lifecycle &amp; Commerce Scaling" loading="lazy"></div>
         <div class="case-meta">
           <div>
-            <span class="case-type">IP Ecosystem</span>
-            <h4>Global IP Deal</h4>
-            <span class="case-sub">Doraemon Lifecycle &amp; Commerce Scaling</span>
+            <span class="case-type" data-i18n="c5_type">IP Ecosystem</span>
+            <h4 data-i18n="c5_h4">Global IP Deal</h4>
+            <span class="case-sub" data-i18n="c5_sub">Doraemon Lifecycle &amp; Commerce Scaling</span>
           </div>
           <span class="case-index">( 05 )</span>
         </div>
@@ -476,9 +509,9 @@
         <div class="case-figure"><img src="assets/06-entertainment-endorsement.jpg" alt="Entertainment Endorsement — Global Footprint &amp; Private Traffic Ops" loading="lazy"></div>
         <div class="case-meta">
           <div>
-            <span class="case-type">Entertainment</span>
-            <h4>Entertainment Endorsement</h4>
-            <span class="case-sub">Global Footprint &amp; Private Traffic Ops</span>
+            <span class="case-type" data-i18n="c6_type">Entertainment</span>
+            <h4 data-i18n="c6_h4">Entertainment Endorsement</h4>
+            <span class="case-sub" data-i18n="c6_sub">Global Footprint &amp; Private Traffic Ops</span>
           </div>
           <span class="case-index">( 06 )</span>
         </div>
@@ -488,9 +521,9 @@
         <div class="case-figure"><img src="assets/07-offline-event.jpg" alt="Offline Event — The Dark Knight Global Retail Concept" loading="lazy"></div>
         <div class="case-meta">
           <div>
-            <span class="case-type">Impact Retail</span>
-            <h4>Offline Event</h4>
-            <span class="case-sub">The Dark Knight Global Retail Concept</span>
+            <span class="case-type" data-i18n="c7_type">Impact Retail</span>
+            <h4 data-i18n="c7_h4">Offline Event</h4>
+            <span class="case-sub" data-i18n="c7_sub">The Dark Knight Global Retail Concept</span>
           </div>
           <span class="case-index">( 07 )</span>
         </div>
@@ -500,9 +533,9 @@
         <div class="case-figure"><img src="assets/08-roi-kol-content.jpg" alt="ROI Driven KOL Content — Digital Asset Management &amp; Growth" loading="lazy"></div>
         <div class="case-meta">
           <div>
-            <span class="case-type">KOL/KOC</span>
-            <h4>ROI Driven KOL Content</h4>
-            <span class="case-sub">Digital Asset Management &amp; Growth</span>
+            <span class="case-type" data-i18n="c8_type">KOL/KOC</span>
+            <h4 data-i18n="c8_h4">ROI Driven KOL Content</h4>
+            <span class="case-sub" data-i18n="c8_sub">Digital Asset Management &amp; Growth</span>
           </div>
           <span class="case-index">( 08 )</span>
         </div>
@@ -512,9 +545,9 @@
         <div class="case-figure"><img src="assets/09-coach-loreal-scrm.jpg" alt="Coach &amp; L'Oreal SCRM — ROI Matrix &amp; Private Traffic Optimization" loading="lazy"></div>
         <div class="case-meta">
           <div>
-            <span class="case-type">SCRM</span>
-            <h4>Coach &amp; L'Oreal SCRM</h4>
-            <span class="case-sub">ROI Matrix &amp; Private Traffic Optimization</span>
+            <span class="case-type" data-i18n="c9_type">SCRM</span>
+            <h4 data-i18n="c9_h4">Coach &amp; L'Oreal SCRM</h4>
+            <span class="case-sub" data-i18n="c9_sub">ROI Matrix &amp; Private Traffic Optimization</span>
           </div>
           <span class="case-index">( 09 )</span>
         </div>
@@ -525,7 +558,7 @@
 
   <!-- ————— Partners ————— -->
   <section class="partners">
-    <p class="partners-label eyebrow reveal is-visible">Global Network &amp; Elite Partners</p>
+    <p class="partners-label eyebrow reveal is-visible" data-i18n="partners_label">Global Network &amp; Elite Partners</p>
     <div class="marquee" aria-label="Global Network and Elite Partners">
       <div class="marquee-track">
         <div class="marquee-set">
@@ -542,7 +575,7 @@
   <section id="contact" class="contact-sec wrap">
     <div class="hline is-visible" data-hline=""></div>
     <div class="contact-grid">
-      <h2 class="reveal d1 is-visible">Deploy Your <em>Unfair Advantage</em></h2>
+      <h2 class="reveal d1 is-visible" data-i18n="ct_h2">Deploy Your <em>Unfair Advantage</em></h2>
       <div class="contact-cta reveal d2 is-visible">
         <a class="btn-line reveal d3 is-visible" href="mailto:info@alphirst.com">info@alphirst.com <span class="arrow">→</span></a>
       </div>
@@ -556,8 +589,8 @@
     <div class="hline is-visible" data-hline=""></div>
     <div class="footer-grid">
       <div>
-        <p class="footer-label">Base of Operations</p>
-        <p class="footer-loc">Shanghai / Bangkok</p>
+        <p class="footer-label" data-i18n="foot_label">Base of Operations</p>
+        <p class="footer-loc" data-i18n="foot_loc">Shanghai / Bangkok</p>
       </div>
       <div class="footer-divider" aria-hidden="true"></div>
       <div class="footer-right">
@@ -599,6 +632,96 @@
 </div>
 
 <script>
+  // ————— Bilingual toggle (EN / 中文) —————
+  const I18N = {
+    en: {
+      nav_menu: "Menu", nav_contact: "Contact",
+      menu_close: "Close", menu_home: "Home", menu_services: "Services", menu_portfolio: "Portfolio", menu_contact: "Contact",
+      menu_loc: "Shanghai / Bangkok",
+      hero_l1: "Translating", hero_l2: "Unfair Edge", hero_l3: "into Market Dominance.",
+      hero_p: "We empower established brands and nurture startups by weaponizing competitive advantages in elite IP and disruptive social commerce.",
+      hero_cta: "Explore Capabilities",
+      serv_eyebrow: "Strategic Solutions",
+      serv_h2: "Weaponizing the <em>Unfair Advantage</em>",
+      s1_h4: "Elite IP Synergy",
+      s1_p: "Weaponizing global titans from entertainment, sports, and contemporary art into your brand DNA.",
+      s1_t1: "Celebrity Strategy", s1_t2: "Global Artist Collaborations", s1_t3: "Cultural IP Integration",
+      s2_h4: "Performance Social-Commerce",
+      s2_p: "Aggressive, ROI-driven KOL matrix management and high-impact physical activations that convert.",
+      s2_t1: "ROI-Driven KOL Matrix", s2_t2: "Impact Offline Popups", s2_t3: "Omnichannel Growth",
+      s3_h4: "Next-Gen CRM Ecosystems",
+      s3_p: "Bespoke digitalization of brand assets and private traffic development through custom tech architecture.",
+      s3_t1: "CRM Tech Architecture", s3_t2: "Private Traffic Operation", s3_t3: "Digital Asset Management",
+      pf_eyebrow: "Elite Activations",
+      pf_h2: "Global Impact <em>Portfolio</em>",
+      c1_type: "Global IP", c1_h4: "Rain x Plaza 66", c1_sub: "Celebrity Driven Luxury Activation / SH",
+      c2_type: "Elite Artist", c2_h4: "Murakami Takashi", c2_sub: "Ohana Hatake Global Pop-up Synergy",
+      c3_type: "Sport IP", c3_h4: "Sports Endorsement", c3_sub: "Legacy IP x Tech Platform Integration",
+      c4_type: "Entertainment", c4_h4: "Kpop Activation", c4_sub: "K-Pop Identity Synchronization",
+      c5_type: "IP Ecosystem", c5_h4: "Global IP Deal", c5_sub: "Doraemon Lifecycle &amp; Commerce Scaling",
+      c6_type: "Entertainment", c6_h4: "Entertainment Endorsement", c6_sub: "Global Footprint &amp; Private Traffic Ops",
+      c7_type: "Impact Retail", c7_h4: "Offline Event", c7_sub: "The Dark Knight Global Retail Concept",
+      c8_type: "KOL/KOC", c8_h4: "ROI Driven KOL Content", c8_sub: "Digital Asset Management &amp; Growth",
+      c9_type: "SCRM", c9_h4: "Coach &amp; L'Oreal SCRM", c9_sub: "ROI Matrix &amp; Private Traffic Optimization",
+      partners_label: "Global Network &amp; Elite Partners",
+      ct_h2: "Deploy Your <em>Unfair Advantage</em>",
+      foot_label: "Base of Operations", foot_loc: "Shanghai / Bangkok",
+      doc_title: "Alphirst — Translating Unfair Edge into Market Dominance"
+    },
+    zh: {
+      nav_menu: "菜单", nav_contact: "联系",
+      menu_close: "关闭", menu_home: "首页", menu_services: "服务", menu_portfolio: "案例", menu_contact: "联系",
+      menu_loc: "上海 / 曼谷",
+      hero_l1: "将不公平优势", hero_l2: "转化为", hero_l3: "市场统治力。",
+      hero_p: "我们为成熟品牌与初创公司赋能，把顶级 IP 与颠覆性社交电商中的竞争优势，锻造成可执行的商业武器。",
+      hero_cta: "探索核心能力",
+      serv_eyebrow: "战略解决方案",
+      serv_h2: "让<em>不公平优势</em><br>成为武器",
+      s1_h4: "顶级 IP 联动",
+      s1_p: "将娱乐、体育与当代艺术领域的全球巨头势能，注入你的品牌 DNA。",
+      s1_t1: "明星策略", s1_t2: "全球艺术家联名", s1_t3: "文化 IP 整合",
+      s2_h4: "实效社交电商",
+      s2_p: "以 ROI 为导向的 KOL 矩阵管理，与高转化的线下快闪落地。",
+      s2_t1: "ROI 导向 KOL 矩阵", s2_t2: "高转化线下快闪", s2_t3: "全渠道增长",
+      s3_h4: "新一代 CRM 生态",
+      s3_p: "以定制技术架构，实现品牌资产数字化与私域流量运营。",
+      s3_t1: "CRM 技术架构", s3_t2: "私域流量运营", s3_t3: "数字资产管理",
+      pf_eyebrow: "顶级案例落地",
+      pf_h2: "全球影响力<br><em>案例集</em>",
+      c1_type: "全球 IP", c1_h4: "Rain x Plaza 66", c1_sub: "明星驱动的奢品落地活动 / 上海",
+      c2_type: "顶级艺术家", c2_h4: "村上隆", c2_sub: "Ohana Hatake 全球快闪联动",
+      c3_type: "体育 IP", c3_h4: "体育代言", c3_sub: "经典 IP × 科技平台整合",
+      c4_type: "娱乐", c4_h4: "K-Pop 快闪活动", c4_sub: "K-Pop 形象同步",
+      c5_type: "IP 生态", c5_h4: "全球 IP 合作", c5_sub: "哆啦A梦全周期商业化运营",
+      c6_type: "娱乐", c6_h4: "娱乐代言", c6_sub: "全球布局与私域运营",
+      c7_type: "影响力零售", c7_h4: "线下主题活动", c7_sub: "《黑暗骑士》全球零售概念",
+      c8_type: "KOL/KOC", c8_h4: "ROI 导向 KOL 内容", c8_sub: "数字资产管理与增长",
+      c9_type: "SCRM", c9_h4: "Coach &amp; L'Oreal SCRM", c9_sub: "ROI 矩阵与私域精细化运营",
+      partners_label: "全球网络与顶级合作伙伴",
+      ct_h2: "发挥你的<em>不公平优势</em>",
+      foot_label: "运营总部", foot_loc: "上海 / 曼谷",
+      doc_title: "Alphirst — 将不公平优势转化为市场统治力"
+    }
+  };
+
+  let lang = localStorage.getItem('alphirst-lang');
+  if (lang !== 'en' && lang !== 'zh') {
+    lang = (navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  }
+  function applyLang(l) {
+    lang = l;
+    localStorage.setItem('alphirst-lang', l);
+    document.documentElement.lang = (l === 'zh') ? 'zh-CN' : 'en';
+    document.title = I18N[l].doc_title;
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const v = I18N[l][el.getAttribute('data-i18n')];
+      if (v != null) el.innerHTML = v;
+    });
+    document.querySelectorAll('.lang-switch button').forEach((b) => b.classList.toggle('active', b.getAttribute('data-lang') === l));
+  }
+  document.querySelectorAll('.lang-switch button').forEach((b) => b.addEventListener('click', () => applyLang(b.getAttribute('data-lang'))));
+  applyLang(lang);
+
   // Header hairline: draw across on load, then track scroll progress
   const headerRule = document.getElementById('headerRule');
   headerRule.style.transition = 'width 2s cubic-bezier(.22,.61,.36,1)';
@@ -635,11 +758,9 @@
   // Credits modal
   const credits = document.getElementById('creditsOverlay');
   const creditsOpen = (v) => { credits.classList.toggle('open', v); credits.setAttribute('aria-hidden', String(!v)); document.body.style.overflow = v ? 'hidden' : ''; };
-  document.getElementById('creditsBtn').addEventListener('click', () => creditsOpen(true));
-  document.getElementById('creditsClose').addEventListener('click', () => creditsOpen(false));
+  document.getElementById('creditsBtn')?.addEventListener('click', () => creditsOpen(true));
+  document.getElementById('creditsClose')?.addEventListener('click', () => creditsOpen(false));
   credits.addEventListener('click', (e) => { if (e.target === credits) creditsOpen(false); });
 </script>
-
-
 
 </body></html>
