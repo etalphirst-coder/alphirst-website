@@ -335,7 +335,7 @@
     </div>
     <div class="header-col right">
       <div class="lang-switch" role="group" aria-label="Language / 语言">
-        <button type="button" data-lang="en" aria-label="English">EN</button>
+        <button type="button" data-lang="en" aria-label="English">English</button>
         <span class="sep" aria-hidden="true">/</span>
         <button type="button" data-lang="zh" aria-label="中文">中文</button>
       </div>
@@ -706,7 +706,7 @@
 
   let lang = localStorage.getItem('alphirst-lang');
   if (lang !== 'en' && lang !== 'zh') {
-    lang = (navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+    lang = 'en';
   }
   function applyLang(l) {
     lang = l;
