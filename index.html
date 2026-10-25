@@ -1,13 +1,645 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Alphirst.com</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alphirst — Translating Unfair Edge into Market Dominance</title>
+<meta name="description" content="We empower established brands and nurture startups by weaponizing luxury-tier competitive advantages in elite IP and disruptive social commerce.">
+<link rel="icon" href="assets/alphirst-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  /* ————————————————————————————————————————
+     Visual system — referenced from moss.nyc
+     white #ffffff · charcoal #151516 · sage #657a54
+     Editorial 3-column grid, hairline system,
+     hand-drawn text marks
+     ———————————————————————————————————————— */
+  :root {
+    --cream: #ffffff;
+    --cream-soft: #ffffff;
+    --cream-on-dark: #ffffff;
+    --charcoal: #151516;
+    --charcoal-70: rgba(21, 21, 22, .7);
+    --charcoal-50: rgba(21, 21, 22, .5);
+    --charcoal-30: rgba(21, 21, 22, .3);
+    --sage: #657a54;
+    --hairline: 1px solid #151516;
+    --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --gutter: clamp(20px, 5.5vw, 80px);
+    --maxw: 1680px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--cream);
+    color: var(--charcoal);
+    font-family: var(--sans);
+    font-size: 16px; line-height: 1.55; letter-spacing: .02em;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--sage); color: var(--cream); }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter); }
 
+  /* Typographic roles */
+  .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .28em; text-transform: uppercase; color: var(--sage); }
+  .micro { font-size: 10px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+
+  /* ————— Hairline system ————— */
+  .hline { position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: #151516; transform: scaleX(0); transform-origin: left; transition: transform 1.6s cubic-bezier(.22,.61,.36,1); }
+  .hline.from-right { transform-origin: right; left: auto; right: 0; }
+  .hline.is-visible { transform: scaleX(1); }
+  .vline { position: absolute; top: 0; height: 100%; width: 1px; background: #151516; transform: scaleY(0); transform-origin: top; transition: transform 1.6s cubic-bezier(.22,.61,.36,1) .2s; }
+  .vline.is-visible { transform: scaleY(1); }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s ease, transform .9s cubic-bezier(.22,.61,.36,1); }
+  .reveal.is-visible { opacity: 1; transform: none; }
+  .reveal.d1 { transition-delay: .08s; } .reveal.d2 { transition-delay: .16s; }
+  .reveal.d3 { transition-delay: .24s; } .reveal.d4 { transition-delay: .32s; }
+
+  /* ————— Header ————— */
+  header.site { position: fixed; top: 0; left: 0; right: 0; z-index: 90; background: var(--cream); }
+  .header-inner { max-width: 1520px; margin: 0 auto; height: 88px; display: flex; align-items: center; padding: 0 var(--gutter); position: relative; }
+  .header-col { flex: 1; display: flex; align-items: center; }
+  .header-col.right { justify-content: flex-end; }
+  .menu-btn, .header-mail {
+    font-size: 11px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase;
+    background: none; border: 0; cursor: pointer; color: var(--charcoal);
+    position: relative; padding-bottom: 3px;
+  }
+  .menu-btn::after, .header-mail::after {
+    content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%;
+    background: #151516; transform: scaleX(0); transform-origin: left; transition: transform .45s cubic-bezier(.22,.61,.36,1);
+  }
+  .menu-btn:hover::after, .header-mail:hover::after { transform: scaleX(1); }
+  .header-logo { justify-content: center; }
+  .header-logo img { height: 34px; width: auto; }
+  .header-rule-track { position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; }
+  .header-rule { height: 1px; background: #151516; width: 0%; }
+
+  /* ————— Full-screen menu ————— */
+  .menu-overlay {
+    position: fixed; inset: 0; z-index: 95; background: var(--cream);
+    display: flex; flex-direction: column; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity .5s ease;
+  }
+  .menu-overlay.open { opacity: 1; pointer-events: auto; }
+  .menu-overlay .wrap { width: 100%; }
+  .menu-close {
+    position: absolute; top: 34px; right: var(--gutter);
+    font-size: 11px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase;
+    background: none; border: 0; cursor: pointer; color: var(--charcoal);
+  }
+  .menu-list { list-style: none; }
+  .menu-list li { border-top: var(--hairline); }
+  .menu-list li:last-child { border-bottom: var(--hairline); }
+  .menu-list a {
+    display: flex; align-items: baseline; gap: 28px;
+    padding: clamp(14px, 2.6vh, 26px) 0;
+    font-family: var(--serif); font-weight: 300; letter-spacing: -.02em;
+    font-size: clamp(40px, 7.2vh, 84px); line-height: 1;
+    transition: padding-left .5s cubic-bezier(.22,.61,.36,1), color .3s ease;
+  }
+  .menu-list a .idx { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .2em; color: var(--sage); }
+  .menu-list a:hover { padding-left: 26px; font-style: italic; color: var(--sage); }
+  .menu-foot { display: flex; justify-content: space-between; gap: 20px; padding-top: 28px; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; font-weight: 600; color: var(--charcoal-50); flex-wrap: wrap; }
+  .menu-overlay:not(.open) .menu-list a { opacity: 0; transform: translateY(18px); }
+  .menu-overlay .menu-list a { opacity: 1; transform: none; transition: opacity .6s ease, transform .6s cubic-bezier(.22,.61,.36,1), padding-left .5s cubic-bezier(.22,.61,.36,1), color .3s ease; }
+  .menu-overlay.open .menu-list li:nth-child(1) a { transition-delay: .10s; }
+  .menu-overlay.open .menu-list li:nth-child(2) a { transition-delay: .18s; }
+  .menu-overlay.open .menu-list li:nth-child(3) a { transition-delay: .26s; }
+  .menu-overlay.open .menu-list li:nth-child(4) a { transition-delay: .34s; }
+  .menu-overlay:not(.open) .menu-list a { transition: opacity .25s ease, transform .25s ease; }
+
+  /* ————— Hero ————— */
+  .hero { padding-top: clamp(104px, 11.5vw, 156px); padding-bottom: 40px; }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 300;
+    font-size: clamp(44px, 8.4vw, 168px);
+    line-height: .98; letter-spacing: -.035em;
+    position: relative;
+  }
+  .hero h1 .line { display: block; position: relative; }
+  .hero h1 .line-2 { text-align: right; padding-right: 3vw; font-style: italic; color: var(--sage); }
+  .hero h1 .line-3 { text-align: left; }
+  .hero-sub { margin-top: clamp(36px, 5vw, 72px); display: flex; flex-wrap: wrap; align-items: flex-end; gap: 40px; justify-content: space-between; }
+  .hero-sub p { max-width: 560px; font-size: 17px; line-height: 1.7; color: var(--charcoal-70); }
+  .btn-line {
+    display: inline-flex; align-items: center; gap: 16px;
+    border: var(--hairline); padding: 20px 34px;
+    font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+    background: transparent; color: var(--charcoal); cursor: pointer;
+    transition: background .4s ease, color .4s ease;
+  }
+  .btn-line .arrow { transition: transform .4s ease; }
+  .btn-line:hover { background: var(--charcoal); color: var(--cream-on-dark); }
+  .btn-line:hover .arrow { transform: translateX(6px); }
+  .hero-note { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--charcoal-50); display: flex; align-items: center; gap: 14px; }
+  .hero-note .dash { width: 48px; height: 1px; background: var(--charcoal-30); }
+
+  /* Draw-in animation for the hand-drawn text marks (underline / circle) */
+  .ink path, .ink ellipse { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .is-visible .ink path, .is-visible .ink ellipse, .ink.is-visible path { animation: draw 2.2s cubic-bezier(.4,0,.2,1) forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  /* ————— Full-bleed strip ————— */
+  .bleed { position: relative; padding: 25px 0; }
+  .bleed-rail { overflow-x: auto; scrollbar-width: none; }
+  .bleed-rail::-webkit-scrollbar { display: none; }
+  .bleed-frame { position: relative; width: 100%; aspect-ratio: 42.5% ; overflow: hidden; border-top: var(--hairline); border-bottom: var(--hairline); }
+  .bleed-frame img { width: 100%; height: 100%; object-fit: cover; animation: kenburns 26s ease-in-out infinite alternate; }
+  @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.06); } }
+  .bleed-cap { display: flex; justify-content: space-between; padding-top: 12px; }
+  .bleed-cap span { font-size: 10px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--charcoal-50); }
+
+  /* ————— Editorial 3-col grid ————— */
+  .grid3 { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .grid3 > * { padding: clamp(28px, 3.5vw, 56px) 0; }
+  .grid3 .cell-pad-l { padding-left: clamp(20px, 2.5vw, 40px); }
+
+  /* Section header */
+  .section-head { padding: clamp(48px, 7vw, 110px) 0 clamp(30px, 4vw, 60px); display: grid; gap: 22px; }
+  .section-head h2 { font-family: var(--serif); font-weight: 300; font-size: clamp(40px, 6.4vw, 104px); line-height: 1.02; letter-spacing: -.03em; max-width: 16ch; }
+  .section-head h2 em { font-style: italic; color: var(--sage); }
+
+  /* ————— Manifesto ————— */
+  .manifesto-note { display: flex; flex-direction: column; gap: 26px; align-items: flex-start; justify-content: space-between; min-height: 100%; }
+  .manifesto-note .end-mark { display: flex; align-items: center; gap: 14px; font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--charcoal-50); }
+  .manifesto-note .end-mark .dash { width: 48px; height: 1px; background: var(--charcoal-30); }
+  .manifesto-copy p {
+    font-family: var(--serif); font-weight: 300;
+    font-size: clamp(24px, 2.4vw, 36px); line-height: 1.28; letter-spacing: -.01em;
+    max-width: 30ch;
+  }
+  .manifesto-copy p + p { margin-top: 1.1em; }
+  /* sage underline & circle (moss-style text accents) */
+  .u-sage {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 9" preserveAspectRatio="none"><path d="M2 6 C 22 3.4, 44 7.4, 62 5.2 C 82 3, 102 6.6, 118 4.4" fill="none" stroke="%23657a54" stroke-width="2.2" stroke-linecap="round"/></svg>');
+    background-repeat: no-repeat; background-position: 0 100%; background-size: 100% .34em; padding-bottom: .18em;
+  }
+  .circled { position: relative; white-space: nowrap; }
+  .circled svg { position: absolute; left: -6%; top: -22%; width: 112%; height: 144%; overflow: visible; pointer-events: none; }
+  .circled ellipse { fill: none; stroke: var(--sage); stroke-width: 2.4; }
+
+  /* ————— Services ————— */
+  .services-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr 1fr; border-top: var(--hairline); margin-top: clamp(30px, 4vw, 60px); }
+  .service { padding: clamp(30px, 3.6vw, 58px) clamp(22px, 2.6vw, 44px) clamp(38px, 4.4vw, 68px); display: block; transition: background .45s ease; }
+  .service + .service { border-left: var(--hairline); }
+  .service:hover { background: var(--cream-soft); }
+  .service .num { font-family: var(--serif); font-style: italic; font-size: 14px; color: var(--sage); display: block; margin-bottom: 30px; }
+  .service .glyph { color: var(--charcoal); margin-bottom: 20px; transition: color .4s ease; }
+  .service:hover .glyph { color: var(--sage); }
+  .service .glyph svg { width: 30px; height: 30px; }
+  .service h4 { font-family: var(--serif); font-weight: 400; font-size: clamp(22px, 2vw, 30px); letter-spacing: -.01em; margin-bottom: 12px; }
+  .service p { font-size: 15px; line-height: 1.7; color: var(--charcoal-70); margin-bottom: 20px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+  .tags span { font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--sage); }
+
+  /* ————— Portfolio ————— */
+  .portfolio-grid { display: grid; grid-template-columns: 1fr; gap: clamp(52px, 6.5vw, 104px); padding-bottom: clamp(48px, 6vw, 90px); }
+  .case { display: block; }
+  .case-figure { position: relative; background: #fff; }
+  .case-figure img { width: 100%; height: auto; }
+  .case-meta { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 12px; padding: 18px 0 0; border-top: 1px solid var(--charcoal-30); }
+  .case-type { font-size: 10px; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--sage); }
+  .case h4 { font-family: var(--serif); font-weight: 400; letter-spacing: -.015em; font-size: clamp(24px, 2.6vw, 38px); margin: 6px 0 8px; }
+  .case-sub { font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--charcoal-50); }
+  .case-index { font-family: var(--serif); font-style: italic; font-size: 14px; color: var(--charcoal-30); }
+
+  /* ————— Partners ————— */
+  .partners { padding: 25px 0; }
+  .partners-label { text-align: center; padding: clamp(30px, 4vw, 52px) 0; }
+  .marquee { overflow: hidden; border-top: var(--hairline); border-bottom: var(--hairline); padding: 26px 0; }
+  .marquee-track { display: flex; width: max-content; animation: scroll-x 48s linear infinite; }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  .marquee-set { display: flex; align-items: center; }
+  .marquee-set span { font-family: var(--serif); font-weight: 300; font-size: clamp(22px, 2.6vw, 40px); letter-spacing: -.02em; white-space: nowrap; padding: 0 34px; position: relative; }
+  .marquee-set span::after { content: ""; position: absolute; right: 0; top: 50%; width: 1px; height: .8em; background: var(--charcoal-30); transform: translateY(-50%); }
+  @keyframes scroll-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ————— Contact ————— */
+  .contact-sec { padding: clamp(52px, 6.5vw, 104px) 0 clamp(44px, 5.5vw, 88px); }
+  .contact-grid {
+    display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    gap: clamp(26px, 3vw, 56px); align-items: end;
+    padding-top: clamp(38px, 4.6vw, 68px);
+  }
+  .contact-grid h2 {
+    font-family: var(--serif); font-weight: 300;
+    font-size: clamp(38px, 6vw, 100px); line-height: 1.02; letter-spacing: -.03em;
+  }
+  .contact-grid h2 em { font-style: italic; color: var(--sage); display: inline-block; }
+  .contact-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; padding-bottom: 8px; }
+
+  /* ————— Footer ————— */
+  footer.site { background: var(--cream); }
+  .footer-grid { position: relative; display: grid; grid-template-columns: 1fr 1px 1fr; gap: 0 clamp(28px, 5vw, 80px); padding: clamp(44px, 5vw, 80px) 0 clamp(28px, 3vw, 44px); align-items: start; }
+  .footer-divider { width: 1px; background: var(--charcoal-30); height: 100%; min-height: 120px; }
+  .footer-label { font-size: 10px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--charcoal-50); margin-bottom: 14px; }
+  .footer-loc { font-family: var(--serif); font-weight: 400; font-size: clamp(26px, 2.6vw, 40px); letter-spacing: -.02em; }
+  .footer-right { display: flex; flex-direction: column; align-items: flex-end; gap: 26px; }
+  .footer-right img { height: 40px; width: auto; }
+  .footer-social { display: flex; gap: 28px; }
+  .footer-social a, .credits-btn { font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--charcoal-50); background: none; border: 0; cursor: pointer; transition: color .3s; }
+  .footer-social a:hover, .credits-btn:hover { color: var(--charcoal); }
+  .footer-base { border-top: var(--hairline); padding: 22px 0 34px; display: flex; justify-content: space-between; gap: 20px; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; font-weight: 600; color: var(--charcoal-30); flex-wrap: wrap; }
+
+  /* ————— Credits modal (blob) ————— */
+  .credits-overlay { position: fixed; inset: 0; z-index: 96; background: rgba(21,21,22,.28); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .45s ease; padding: 24px; }
+  .credits-overlay.open { opacity: 1; pointer-events: auto; }
+  .credits-panel { position: relative; width: min(640px, 94vw); }
+  .credits-panel svg.blob-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .credits-content { position: relative; z-index: 2; padding: clamp(48px, 8vw, 84px) clamp(36px, 7vw, 76px); color: var(--cream-on-dark); }
+  .credits-content h3 { font-family: var(--serif); font-weight: 300; font-size: 26px; margin-bottom: 22px; letter-spacing: -.01em; }
+  .credits-content dl { display: grid; grid-template-columns: auto 1fr; gap: 10px 26px; font-size: 13px; line-height: 1.6; }
+  .credits-content dt { font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: 10px; color: #a8bd97; padding-top: 2px; }
+  .credits-content dd { color: rgba(240,231,225,.78); }
+  .credits-content a { text-decoration: underline; text-underline-offset: 3px; }
+  .credits-close { margin-top: 28px; background: none; border: 0; cursor: pointer; color: #91aec5; font-size: 11px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; }
+
+  /* ————— Responsive ————— */
+  @media (max-width: 900px) {
+    .header-inner { height: 72px; }
+    .header-logo img { height: 28px; }
+    .hero { padding-top: 104px; }
+    .hero h1 .line-2 { padding-right: 0; }
+    .grid3 { grid-template-columns: 1fr; }
+    .vline { display: none; }
+    .grid3 .cell-pad-l { padding-left: 0; }
+    .services-grid { grid-template-columns: 1fr; margin-top: 24px; }
+    .service { padding-left: 0; padding-right: 0; }
+    .service + .service { border-left: none; border-top: var(--hairline); }
+    .contact-grid { grid-template-columns: 1fr; align-items: start; }
+    .contact-cta { padding-bottom: 0; }
+    .portfolio-grid { gap: 44px; }
+    .case h4 { font-size: 26px; }
+    .hero h1 .line-2, .hero h1 .line-3 { text-align: left; }
+    .footer-grid { grid-template-columns: 1fr; gap: 34px; }
+    .footer-divider { display: none; }
+    .footer-right { align-items: flex-start; }
+    .footer-base { flex-direction: column; }
+    .manifesto-copy p { max-width: none; }
+  }
+  @media (max-width: 640px) {
+    .service .num { margin-bottom: 22px; }
+    .contact-grid { gap: 30px; }
+    .contact-grid h2 { max-width: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+    .hline { transform: scaleX(1); } .vline { transform: scaleY(1); }
+    .ink path, .ink ellipse { stroke-dashoffset: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ————— Header ————— -->
+<header class="site">
+  <div class="header-inner">
+    <div class="header-col"><button class="menu-btn" id="menuBtn">Menu</button></div>
+    <div class="header-col header-logo">
+      <a href="#home" aria-label="Alphirst home"><img src="assets/alphirst-logo.png" alt="Alphirst Logo"></a>
+    </div>
+    <div class="header-col right"><a class="header-mail" href="mailto:info@alphirst.com">Contact</a></div>
+    <div class="header-rule-track"><div class="header-rule" id="headerRule" style="transition: width 0.15s linear; width: 100%;"></div></div>
+  </div>
+</header>
+
+<!-- Full-screen menu -->
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+  <button class="menu-close" id="menuClose">Close</button>
+  <div class="wrap">
+    <ul class="menu-list">
+      <li><a href="#home"><span class="idx">01</span>Home</a></li>
+      <li><a href="#services"><span class="idx">02</span>Services</a></li>
+      <li><a href="#portfolio"><span class="idx">03</span>Portfolio</a></li>
+      <li><a href="#contact"><span class="idx">04</span>Contact</a></li>
+    </ul>
+    <div class="menu-foot">
+      <span>info@alphirst.com</span>
+      <span>Shanghai / Bangkok</span>
+    </div>
+  </div>
+</div>
+
+<main>
+  <!-- ————— Hero ————— -->
+  <section id="home" class="hero wrap">
+    <h1>
+      <span class="line line-1 reveal is-visible">Translating</span>
+      <span class="line line-2 reveal d1 is-visible">Unfair Edge</span>
+      <span class="line line-3 reveal d2 is-visible">into Market Dominance.</span>
+    </h1>
+    <div class="hero-sub">
+      <p class="reveal d3 is-visible">We empower established brands and nurture startups by weaponizing competitive advantages in elite IP and disruptive social commerce.​</p>
+      <div style="display:flex;flex-direction:column;gap:26px;align-items:flex-start">
+        <a class="btn-line reveal d3 is-visible" href="#services">Explore Capabilities <span class="arrow">→</span></a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ————— Full-bleed strip (scrolls horizontally on small screens) ————— -->
+
+
+  <!-- ————— Manifesto (editorial 3-col + vertical hairline) ————— -->
+  <section class="wrap" style="position:relative">
+    <div class="hline from-right is-visible" data-hline=""></div>
+
+  </section>
+
+  <!-- ————— Services ————— -->
+  <section id="services" class="wrap" style="position:relative">
+    <div class="hline is-visible" data-hline=""></div>
+    <div class="section-head">
+      <span class="eyebrow reveal is-visible">Strategic Solutions</span>
+      <h2 class="reveal d1 is-visible">Weaponizing the <em>Unfair Advantage</em></h2>
+    </div>
+    <div class="services-grid">
+      <div class="vline is-visible" style="left:calc(33.333% - 1px)" data-vline=""></div>
+      <div class="vline is-visible" style="left:calc(66.666% - 1px)" data-vline=""></div>
+
+      <article class="service reveal is-visible">
+        <span class="num" aria-hidden="true">( 01 )</span>
+        <div class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"></circle><path d="M8.6 12.4 7 21l5-2.6L17 21l-1.6-8.6"></path></svg>
+        </div>
+        <div>
+          <h4>Elite IP Synergy</h4>
+          <p>Weaponizing global titans from entertainment, sports, and contemporary art into your brand DNA.</p>
+          <div class="tags"><span>Celebrity Strategy</span><span>Global Artist Collaborations</span><span>Cultural IP Integration</span></div>
+        </div>
+      </article>
+      <article class="service reveal d1 is-visible">
+        <span class="num" aria-hidden="true">( 02 )</span>
+        <div class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-8"></path><path d="M15 8h5v5"></path></svg>
+        </div>
+        <div>
+          <h4>Performance Social-Commerce</h4>
+          <p>Aggressive, ROI-driven KOL matrix management and high-impact physical activations that convert.</p>
+          <div class="tags"><span>ROI-Driven KOL Matrix</span><span>Impact Offline Popups</span><span>Omnichannel Growth</span></div>
+        </div>
+      </article>
+      <article class="service reveal d2 is-visible">
+        <span class="num" aria-hidden="true">( 03 )</span>
+        <div class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="1"></rect><path d="M3 9h18M8 4v5M8 13h8"></path></svg>
+        </div>
+        <div>
+          <h4>Next-Gen CRM Ecosystems</h4>
+          <p>Bespoke digitalization of brand assets and private traffic development through custom tech architecture.</p>
+          <div class="tags"><span>CRM Tech Architecture</span><span>Private Traffic Operation</span><span>Digital Asset Management</span></div>
+        </div>
+      </article>
+    </div>
+
+  </section>
+
+  <!-- ————— Portfolio ————— -->
+  <section id="portfolio" class="wrap" style="position:relative">
+    <div class="hline from-right is-visible" data-hline=""></div>
+    <div class="section-head">
+      <span class="eyebrow reveal is-visible">Elite Activations</span>
+      <h2 class="reveal d1 is-visible">Global Impact <em>Portfolio</em></h2>
+    </div>
+    <div class="portfolio-grid">
+
+      <a class="case reveal is-visible" href="#portfolio">
+        <div class="case-figure"><img src="assets/01-rain-plaza66.jpg" alt="Rain x Plaza 66 — Celebrity Driven Luxury Activation, Shanghai" loading="lazy"></div>
+        <div class="case-meta">
+          <div>
+            <span class="case-type">Global IP</span>
+            <h4>Rain x Plaza 66</h4>
+            <span class="case-sub">Celebrity Driven Luxury Activation / SH</span>
+          </div>
+          <span class="case-index">( 01 )</span>
+        </div>
+      </a>
+
+      <a class="case reveal is-visible" href="#portfolio">
+        <div class="case-figure"><img src="assets/02-murakami.jpg" alt="Murakami Takashi — Ohana Hatake Global Pop-up Synergy" loading="lazy"></div>
+        <div class="case-meta">
+          <div>
+            <span class="case-type">Elite Artist</span>
+            <h4>Murakami Takashi</h4>
+            <span class="case-sub">Ohana Hatake Global Pop-up Synergy</span>
+          </div>
+          <span class="case-index">( 02 )</span>
+        </div>
+      </a>
+
+      <a class="case reveal d1 is-visible" href="#portfolio">
+        <div class="case-figure"><img src="assets/03-sports-endorsement.jpg" alt="Sports Endorsement — Legacy IP x Tech Platform Integration" loading="lazy"></div>
+        <div class="case-meta">
+          <div>
+            <span class="case-type">Sport IP</span>
+            <h4>Sports Endorsement</h4>
+            <span class="case-sub">Legacy IP x Tech Platform Integration</span>
+          </div>
+          <span class="case-index">( 03 )</span>
+        </div>
+      </a>
+
+      <a class="case reveal is-visible" href="#portfolio">
+        <div class="case-figure"><img src="assets/04-kpop-activation.jpg" alt="Kpop Activation — K-Pop Identity Synchronization" loading="lazy"></div>
+        <div class="case-meta">
+          <div>
+            <span class="case-type">Entertainment</span>
+            <h4>Kpop Activation</h4>
+            <span class="case-sub">K-Pop Identity Synchronization</span>
+          </div>
+          <span class="case-index">( 04 )</span>
+        </div>
+      </a>
+
+      <a class="case reveal is-visible" href="#portfolio">
+        <div class="case-figure"><img src="assets/05-global-ip-deal.jpg" alt="Global IP Deal — Doraemon Lifecycle &amp; Commerce Scaling" loading="lazy"></div>
+        <div class="case-meta">
+          <div>
+            <span class="case-type">IP Ecosystem</span>
+            <h4>Global IP Deal</h4>
+            <span class="case-sub">Doraemon Lifecycle &amp; Commerce Scaling</span>
+          </div>
+          <span class="case-index">( 05 )</span>
+        </div>
+      </a>
+
+      <a class="case reveal d1 is-visible" href="#portfolio">
+        <div class="case-figure"><img src="assets/06-entertainment-endorsement.jpg" alt="Entertainment Endorsement — Global Footprint &amp; Private Traffic Ops" loading="lazy"></div>
+        <div class="case-meta">
+          <div>
+            <span class="case-type">Entertainment</span>
+            <h4>Entertainment Endorsement</h4>
+            <span class="case-sub">Global Footprint &amp; Private Traffic Ops</span>
+          </div>
+          <span class="case-index">( 06 )</span>
+        </div>
+      </a>
+
+      <a class="case reveal is-visible" href="#portfolio">
+        <div class="case-figure"><img src="assets/07-offline-event.jpg" alt="Offline Event — The Dark Knight Global Retail Concept" loading="lazy"></div>
+        <div class="case-meta">
+          <div>
+            <span class="case-type">Impact Retail</span>
+            <h4>Offline Event</h4>
+            <span class="case-sub">The Dark Knight Global Retail Concept</span>
+          </div>
+          <span class="case-index">( 07 )</span>
+        </div>
+      </a>
+
+      <a class="case reveal is-visible" href="#portfolio">
+        <div class="case-figure"><img src="assets/08-roi-kol-content.jpg" alt="ROI Driven KOL Content — Digital Asset Management &amp; Growth" loading="lazy"></div>
+        <div class="case-meta">
+          <div>
+            <span class="case-type">KOL/KOC</span>
+            <h4>ROI Driven KOL Content</h4>
+            <span class="case-sub">Digital Asset Management &amp; Growth</span>
+          </div>
+          <span class="case-index">( 08 )</span>
+        </div>
+      </a>
+
+      <a class="case reveal d1 is-visible" href="#portfolio">
+        <div class="case-figure"><img src="assets/09-coach-loreal-scrm.jpg" alt="Coach &amp; L'Oreal SCRM — ROI Matrix &amp; Private Traffic Optimization" loading="lazy"></div>
+        <div class="case-meta">
+          <div>
+            <span class="case-type">SCRM</span>
+            <h4>Coach &amp; L'Oreal SCRM</h4>
+            <span class="case-sub">ROI Matrix &amp; Private Traffic Optimization</span>
+          </div>
+          <span class="case-index">( 09 )</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ————— Partners ————— -->
+  <section class="partners">
+    <p class="partners-label eyebrow reveal is-visible">Global Network &amp; Elite Partners</p>
+    <div class="marquee" aria-label="Global Network and Elite Partners">
+      <div class="marquee-track">
+        <div class="marquee-set">
+          <span>Louis Vuitton</span><span>Coach</span><span>Anta</span><span>Umbro</span><span>Zeekr</span><span>Doraemon</span><span>Pop Mart</span><span>L'Oreal</span><span>Fendi</span><span>Hublot</span><span>le coq sportif</span><span>avia</span><span>human made</span><span>QQ music</span><span>Plaza66</span><span>Descente</span><span>DC shoes</span><span>Lululemon</span>
+        </div>
+        <div class="marquee-set" aria-hidden="true">
+          <span>Louis Vuitton</span><span>Coach</span><span>Anta</span><span>Umbro</span><span>Zeekr</span><span>Doraemon</span><span>Pop Mart</span><span>L'Oreal</span><span>Fendi</span><span>Hublot</span><span>le coq sportif</span><span>avia</span><span>human made</span><span>QQ music</span><span>Plaza66</span><span>Descente</span><span>DC shoes</span><span>Lululemon</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ————— Contact ————— -->
+  <section id="contact" class="contact-sec wrap">
+    <div class="hline is-visible" data-hline=""></div>
+    <div class="contact-grid">
+      <h2 class="reveal d1 is-visible">Deploy Your <em>Unfair Advantage</em></h2>
+      <div class="contact-cta reveal d2 is-visible">
+        <a class="btn-line reveal d3 is-visible" href="mailto:info@alphirst.com">info@alphirst.com <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ————— Footer ————— -->
+<footer class="site">
+  <div class="wrap">
+    <div class="hline is-visible" data-hline=""></div>
+    <div class="footer-grid">
+      <div>
+        <p class="footer-label">Base of Operations</p>
+        <p class="footer-loc">Shanghai / Bangkok</p>
+      </div>
+      <div class="footer-divider" aria-hidden="true"></div>
+      <div class="footer-right">
+        <img src="assets/alphirst-logo.png" alt="Alphirst Logo">
+        <div class="footer-social">
+
+
+
+        </div>
+      </div>
+    </div>
+    <div class="footer-base">
+
+
+
+    </div>
+  </div>
+</footer>
+
+<!-- ————— Credits modal ————— -->
+<div class="credits-overlay" id="creditsOverlay" aria-hidden="true">
+  <div class="credits-panel">
+    <svg class="blob-bg" viewBox="0 0 640 520" preserveAspectRatio="none" aria-hidden="true">
+      <path fill="#151516" d="M322 10 C412 2 512 36 566 100 C616 158 632 238 614 310 C594 392 518 458 416 480 C314 502 196 500 116 452 C42 408 8 330 24 252 C42 166 130 78 232 42 C262 31 290 12 322 10 Z"></path>
+    </svg>
+    <div class="credits-content">
+      <h3>Credits</h3>
+      <dl>
+        <dt>Visual Language</dt>
+        <dd>Editorial system referenced from <a href="https://moss.nyc" target="_blank" rel="noopener">moss.nyc</a> — a members’ club site designed by Pentagram.</dd>
+        <dt>Imagery</dt>
+        <dd>Case imagery only. No decorative illustration is used.</dd>
+        <dt>Content</dt>
+        <dd>All copy and case imagery © Alphirst — Alpha &amp; First.</dd>
+      </dl>
+      <button class="credits-close" id="creditsClose">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Header hairline: draw across on load, then track scroll progress
+  const headerRule = document.getElementById('headerRule');
+  headerRule.style.transition = 'width 2s cubic-bezier(.22,.61,.36,1)';
+  requestAnimationFrame(() => requestAnimationFrame(() => { headerRule.style.width = '0.001%'; }));
+  setTimeout(() => { headerRule.style.transition = 'width .15s linear'; }, 2200);
+  const onScroll = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    headerRule.style.width = (max > 0 ? Math.max(0.1, (window.scrollY / max) * 100) : 0.1) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Reveal + hairline draw
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        // trigger ink figures inside the revealed node
+        e.target.querySelectorAll('.ink').forEach((el) => el.classList.add('is-visible'));
+        if (e.target.classList.contains('ink')) e.target.classList.add('is-visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('.reveal, [data-hline], [data-vline]').forEach((el) => io.observe(el));
+
+  // Full-screen menu
+  const menu = document.getElementById('menuOverlay');
+  const openMenu = (v) => { menu.classList.toggle('open', v); menu.setAttribute('aria-hidden', String(!v)); document.body.style.overflow = v ? 'hidden' : ''; };
+  document.getElementById('menuBtn').addEventListener('click', () => openMenu(true));
+  document.getElementById('menuClose').addEventListener('click', () => openMenu(false));
+  menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => openMenu(false)));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { openMenu(false); creditsOpen(false); } });
+
+  // Credits modal
+  const credits = document.getElementById('creditsOverlay');
+  const creditsOpen = (v) => { credits.classList.toggle('open', v); credits.setAttribute('aria-hidden', String(!v)); document.body.style.overflow = v ? 'hidden' : ''; };
+  document.getElementById('creditsBtn').addEventListener('click', () => creditsOpen(true));
+  document.getElementById('creditsClose').addEventListener('click', () => creditsOpen(false));
+  credits.addEventListener('click', (e) => { if (e.target === credits) creditsOpen(false); });
+</script>
+
+
+
+</body></html>
